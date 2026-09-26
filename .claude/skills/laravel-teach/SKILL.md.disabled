@@ -1,0 +1,102 @@
+---
+name: laravel-teach
+description: Use whenever creating or modifying any file in the company-site-api (Laravel) repository — migrations, models, controllers, routes, middleware, config, anything. This project's second goal is learning Laravel, and this skill is what enforces that every artifact ships with an explanation, written in Arabic.
+---
+
+## Non-negotiable rules
+
+1. **Every Laravel artifact created or meaningfully modified gets a matching entry in `docs/learning/NN-topic.md`.** "Meaningfully modified" means: a new concept was used, not a typo fix or a rename.
+2. **HARD RULE: code and its explanation ship in the same commit.** A Laravel commit that changes `app/`, `routes/`, `database/`, or `config/` with no corresponding `docs/learning/` change is incomplete — do not present it as done.
+3. **Audience calibration:** the reader knows PHP and JavaScript well, and knows nothing about Laravel conventions. Do not explain what a class, an interface, or a function is. Do explain what a service container is, what a facade resolves to at runtime, what Artisan is doing under the hood, why a migration exists instead of hand-editing the database, etc. — the framework-specific "why", not general programming.
+4. **Explanations reference the actual file just written, with line references** (`app/Http/Controllers/ServiceController.php:14`) — not a generic restatement of the Laravel documentation. If you can't point to a specific line, the explanation is too generic.
+5. **Language: every `docs/learning/` file is written in Arabic.** This is a deliberate exception to the project-wide "docs in English" rule — the learning notes are for the developer to read, and they read fastest in Arabic. Specifically:
+   - Prose, headings, and explanations are Arabic (Modern Standard Arabic, plain and direct — no flowery phrasing).
+   - Code, file paths, line references, class/method names, Artisan commands, SQL, and config keys stay exactly as they appear in the code, in English, inside backticks.
+   - Established technical terms keep their English name the first time they appear, in parentheses after the Arabic: "الترحيل (migration)", "حاوية الخدمات (service container)". After that, use whichever reads more naturally — many terms (Eloquent, Facade, Seeder, Factory) are clearer left in English.
+   - File names stay English kebab-case slugs (`09-eloquent-relationships.md`) so they sort and link predictably.
+   - Code comments in the PHP files themselves stay English (CLAUDE.md rule) — only the `docs/learning/` notes are Arabic.
+
+## The mandatory explanation template
+
+Every `docs/learning/NN-topic.md` entry answers exactly these four questions, in this order, using these exact Arabic headings:
+
+1. **`## ما هو؟`** (What is it?) — one or two sentences, concrete, no framework-doc paraphrasing.
+2. **`## لماذا هو هنا في هذا المشروع تحديدًا؟`** (Why is it here, in this project specifically?) — reference the actual file and line, not "Laravel apps typically use this."
+3. **`## ما البديل، ولماذا رُفض؟`** (What was the alternative, and why was it rejected?) — every non-trivial choice has one (Eloquent vs. raw query builder, Form Request vs. inline validation, JSON column vs. separate translations table, etc.).
+4. **`## ماذا ينكسر لو حُذف؟`** (What breaks if it is removed?) — a concrete failure, not "it wouldn't work." E.g. "requests would no longer be authenticated" or "the `services` table would have no `slug` index and category filtering would full-table-scan."
+
+The file's H1 title is also Arabic.
+
+## Numbering and file-ending convention
+
+- Files are numbered by creation order, zero-padded to two digits: `docs/learning/01-request-lifecycle.md`, `02-service-container.md`, etc. Never renumber an existing file to make room — append at the next available number even if topics would read better reordered.
+- Every file ends with a `## ماذا تقرأ بعد ذلك` section (What to read next) — one to three links to the `docs/learning/` entries (existing or anticipated) that build on this one.
+
+## Procedure
+
+1. Before writing the Laravel file, identify which new concept(s) it introduces that haven't already been written up (check `docs/learning/` for an existing entry — don't duplicate one).
+2. Write the Laravel code.
+3. Write (or extend) the matching `docs/learning/NN-topic.md` entry in Arabic, using the four-question template, with line references into the file(s) just written.
+4. Add `## ماذا تقرأ بعد ذلك`.
+5. If a later change shifts line numbers in a file an existing note cites, update that note's line references in the same change.
+6. Commit code and docs together. If the commit only touches Laravel files and no `docs/learning/` file, stop — the task isn't done yet.
+
+## Right / wrong
+
+❌ Wrong — generic, no line reference, restates the Laravel docs:
+
+```markdown
+## ما هو؟
+
+Eloquent هو الـ ORM الخاص بـ Laravel. يتيح لك التعامل مع قاعدة البيانات
+بأسلوب كائني. لكل جدول في قاعدة البيانات موديل مقابل.
+```
+
+❌ Also wrong — correct content, but in English:
+
+```markdown
+## What is it?
+
+`app/Models/Service.php:1-24` is an Eloquent model...
+```
+
+✅ Right — Arabic prose, specific to this project, references the actual file, answers all four questions:
+
+```markdown
+## ما هو؟
+
+`app/Models/Service.php:1-24` موديل Eloquent — كلاس PHP يربط جدول `services`
+بكائنات، ويجعل `Service::where(...)` تتحول إلى SQL دون كتابة استعلامات يدويًا.
+
+## لماذا هو هنا في هذا المشروع تحديدًا؟
+
+`Service::class` يغذّي مسار `GET /api/v1/services` في `routes/api.php` (عبر
+`ServiceResource`) ويغذّي أيضًا شاشات CRUD في لوحة الإدارة لاحقًا — موديل واحد
+وطبقتا استجابة، كما في PROJECT-PLAN.md §0.2.
+
+## ما البديل، ولماذا رُفض؟
+
+رُفضت استعلامات `DB::table('services')` الخام — لا توجد دوال علاقات، ولا
+`$casts` لعمود `title` من نوع JSON (انظر `Service.php:14`)، وكل مستهلك سيحتاج
+معرفة أسماء أعمدة الجدول مباشرة.
+
+## ماذا ينكسر لو حُذف؟
+
+`ServiceController` وكل Seeder أو Factory يشير إلى `Service::class` يفشل في
+التحميل؛ وأمر `php artisan migrate:fresh --seed` يرمي خطأ فورًا.
+
+## ماذا تقرأ بعد ذلك
+
+- `02-service-container.md` — كيف تُبنى كائنات `Service` داخل الطلب
+- `05-api-resources.md` — كيف يتحول `Service` إلى JSON دون كشف الأعمدة الخام
+```
+
+## Pre-commit checklist
+
+- [ ] Every new Laravel concept in this diff has a `docs/learning/NN-topic.md` entry
+- [ ] Each entry is written in Arabic, with code/paths/identifiers left in English
+- [ ] Each entry answers all four questions, in order, under the Arabic headings above
+- [ ] Each entry references actual file(s) and line(s) from this commit, not generic docs
+- [ ] Line references in older entries still point at the right lines after this diff
+- [ ] Each entry ends with `## ماذا تقرأ بعد ذلك`
+- [ ] Code and docs are staged in the same commit

@@ -1,57 +1,55 @@
-# Inertia's shared-props pattern
+# نمط الخصائص المشتركة (shared props) في Inertia
 
-## What is it?
+## ما هو؟
 
-`app/Http/Middleware/HandleInertiaRequests.php:36-46` is a `share()` method
-that runs on every request and returns an array merged into the `props` of
-every Inertia page response, on top of whatever props the controller itself
-passes to `Inertia::render()`. Right now it shares three things:
-`name` (the app name), `auth.user` (the logged-in user or `null`), and
-`sidebarOpen` (a cookie-derived UI flag for the admin sidebar's collapsed
-state).
+`app/Http/Middleware/HandleInertiaRequests.php:36-46` هي دالة `share()` تعمل
+مع كل طلب، وتُرجع مصفوفة تُدمج داخل `props` كل استجابة صفحة من Inertia، فوق
+أي خصائص يمرّرها الـ controller نفسه إلى `Inertia::render()`. حاليًا تشارك
+ثلاثة أشياء: `name` (اسم التطبيق)، و`auth.user` (المستخدم المسجّل دخوله أو
+`null`)، و`sidebarOpen` (علَم واجهة مأخوذ من cookie يحدد هل الشريط الجانبي في
+لوحة الإدارة مطويّ أم لا).
 
-## Why is it here, in this project specifically?
+## لماذا هو هنا في هذا المشروع تحديدًا؟
 
-Every page component under `resources/js/pages/` — `welcome.tsx`,
-`dashboard.tsx`, the `auth/*` and `settings/*` pages — needs to know who's
-logged in to render a nav bar, a "Log in" vs "Dashboard" link
-(`resources/js/pages/welcome.tsx:16-24`), or a settings sidebar. Without a
-shared-props mechanism, every single controller (`ProfileController`,
-`SecurityController`, Fortify's own login/register controllers) would have
-to remember to pass `'auth' => ['user' => $request->user()]` by hand on
-every `Inertia::render()` call. `HandleInertiaRequests` is registered once
-in `bootstrap/app.php:20-24` as global `web` middleware, so it runs before
-every controller and the merge happens automatically — no controller in
-this codebase references `auth.user` explicitly, yet every page component
-receives it.
+كل مكوّن صفحة تحت `resources/js/pages/` — `welcome.tsx` و`dashboard.tsx`
+وصفحات `auth/*` و`settings/*` — يحتاج أن يعرف من المستخدم المسجّل ليعرض شريط
+التنقل، أو رابط "Log in" مقابل "Dashboard"
+(`resources/js/pages/welcome.tsx:16-24`)، أو الشريط الجانبي للإعدادات. بدون آلية
+للخصائص المشتركة، كان على كل controller (`ProfileController` و`SecurityController`
+و controllers الدخول والتسجيل الخاصة بـ Fortify) أن يتذكر تمرير
+`'auth' => ['user' => $request->user()]` يدويًا في كل استدعاء لـ
+`Inertia::render()`. الـ middleware `HandleInertiaRequests` مسجّل مرة واحدة في
+`bootstrap/app.php:20-24` كـ middleware عام لمجموعة `web`، فيعمل قبل كل
+controller ويتم الدمج تلقائيًا — لا يوجد controller في هذا المشروع يذكر
+`auth.user` صراحةً، ومع ذلك يستلمه كل مكوّن صفحة.
 
-## What was the alternative, and why was it rejected?
+## ما البديل، ولماذا رُفض؟
 
-The alternative is what a plain (non-Inertia) Laravel app already does:
-pass `$user` into every `view()` call, or rely on Blade's global `auth()`
-helper inside templates. That doesn't work here because Inertia page
-components are React, not Blade — there's no `auth()` helper available
-client-side, and the whole point of Inertia (per `docs/PROJECT-PLAN.md`
-§0.2/§12) is that the React admin never talks to a JSON API of its own. The
-props have to arrive as data, and shared props are Inertia's mechanism for
-"data every page needs" without prop-drilling it through every controller.
+البديل هو ما يفعله تطبيق Laravel عادي (بدون Inertia): تمرير `$user` إلى كل
+استدعاء `view()`، أو الاعتماد على الدالة العامة `auth()` داخل قوالب Blade. هذا
+لا يصلح هنا لأن مكوّنات صفحات Inertia مكتوبة بـ React وليست Blade — لا توجد دالة
+`auth()` في جهة المتصفح، والفكرة الأساسية من Inertia (حسب
+`docs/PROJECT-PLAN.md` §0.2 و§12) أن لوحة الإدارة المبنية بـ React لا تتحدث مع
+JSON API خاص بها أبدًا. يجب أن تصل الخصائص كبيانات، والخصائص المشتركة هي آلية
+Inertia لتمرير "البيانات التي تحتاجها كل صفحة" دون تمريرها يدويًا عبر كل
+controller (prop drilling).
 
-## What breaks if it is removed?
+## ماذا ينكسر لو حُذف؟
 
-If `HandleInertiaRequests::class` were removed from `bootstrap/app.php:22`,
-`Inertia::render()` calls made by Fortify's own controllers (login,
-register — see `02-fortify-role.md`) would no longer inject `errors` either,
-since the base `Inertia\Middleware::share()` (which our `share()` method
-calls via `...parent::share($request)` at line 39) is what resolves
-validation errors onto every page. More directly: `usePage().props.auth`
-would be `undefined` in every component that reads it —
-`resources/js/pages/welcome.tsx:5`, `resources/js/components/nav-user.tsx`,
-`resources/js/components/app-header.tsx` — so the header would never know a
-user is logged in, always rendering the logged-out nav.
+لو حُذف `HandleInertiaRequests::class` من `bootstrap/app.php:22`، فإن استدعاءات
+`Inertia::render()` التي تقوم بها controllers الخاصة بـ Fortify (الدخول والتسجيل
+— انظر `02-fortify-role.md`) لن تحقن `errors` أيضًا، لأن الدالة الأساسية
+`Inertia\Middleware::share()` (التي تستدعيها دالتنا `share()` عبر
+`...parent::share($request)` في السطر 39) هي المسؤولة عن وضع أخطاء التحقق
+(validation errors) في كل صفحة. وبشكل مباشر أكثر: `usePage().props.auth` سيصبح
+`undefined` في كل مكوّن يقرؤه — `resources/js/pages/welcome.tsx:5` و
+`resources/js/components/nav-user.tsx` و`resources/js/components/app-header.tsx`
+— فلن يعرف الهيدر أبدًا أن هناك مستخدمًا مسجّلًا، وسيعرض دائمًا قائمة التنقل
+الخاصة بالزائر.
 
-## What to read next
+## ماذا تقرأ بعد ذلك
 
-- `02-fortify-role.md` — the package whose controllers call
-  `Inertia::render()` with these shared props already merged in
-- `04-auth-simplification-decision.md` — why the shared-props payload here
-  is smaller than the stock starter kit's (no 2FA/passkey user fields)
+- `02-fortify-role.md` — الحزمة التي تستدعي controllers الخاصة بها
+  `Inertia::render()` وقد دُمجت فيها هذه الخصائص المشتركة مسبقًا
+- `04-auth-simplification-decision.md` — لماذا حمولة الخصائص المشتركة هنا أصغر
+  من حمولة الـ starter kit الأصلي (بدون حقول 2FA أو passkeys في المستخدم)

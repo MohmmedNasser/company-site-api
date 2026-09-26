@@ -1,63 +1,60 @@
-# Fortify's role: backend auth without a UI opinion
+# دور Fortify: مصادقة في الخلفية دون فرض واجهة
 
-## What is it?
+## ما هو؟
 
-`laravel/fortify` (`composer.json:11`) is a headless auth backend — it
-registers routes (`GET /login`, `POST /login`, `GET /register`, etc., see
-the output of `php artisan route:list`), validates credentials, and calls
-Laravel's `Auth` facade to log a session in or out. It ships **no views and
-no frontend** of its own. `app/Providers/FortifyServiceProvider.php:49-74`
-is where this app tells Fortify which Inertia page component to render for
-each of those routes — e.g. line 51, `Fortify::loginView(fn ($request) =>
-Inertia::render('auth/login', [...]))`, points the `/login` route at
-`resources/js/pages/auth/login.tsx` instead of a Blade view.
+`laravel/fortify` (`composer.json:11`) هو backend مصادقة بلا واجهة (headless) —
+يسجّل المسارات (`GET /login` و`POST /login` و`GET /register` وغيرها، انظر ناتج
+`php artisan route:list`)، ويتحقق من بيانات الدخول، ويستدعي الـ Facade
+`Auth` في Laravel لتسجيل الجلسة أو إنهائها. لا يأتي **بأي views ولا بأي
+واجهة أمامية** خاصة به. الملف `app/Providers/FortifyServiceProvider.php:49-74`
+هو المكان الذي يخبر فيه هذا التطبيقُ Fortify أيّ مكوّن صفحة Inertia يعرض لكل
+مسار من تلك المسارات — مثلًا السطر 51،
+`Fortify::loginView(fn ($request) => Inertia::render('auth/login', [...]))`،
+يوجّه مسار `/login` إلى `resources/js/pages/auth/login.tsx` بدل Blade view.
 
-## Why is it here, in this project specifically?
+## لماذا هو هنا في هذا المشروع تحديدًا؟
 
-`docs/PROJECT-PLAN.md`'s Phase 12 explicitly names Fortify (via
-`laravel/breeze`'s React+Inertia preset, later superseded by the official
-`laravel/react-starter-kit`, which itself depends on Fortify) as the auth
-backend for the Inertia admin panel — the same admin panel `routes/web.php`
-protects with `Route::middleware(['auth', 'verified'])` around `dashboard`.
-`config/fortify.php:145-149` is where this project turned specific pieces
-on or off: `Features::registration()`, `Features::resetPasswords()`, and
-`Features::emailVerification()` are enabled; `Features::twoFactorAuthentication()`
-and `Features::passkeys()` — present in the stock starter kit's config —
-were deleted outright (see `04-auth-simplification-decision.md`).
+المرحلة 12 في `docs/PROJECT-PLAN.md` تسمّي Fortify صراحةً (عبر preset الخاص بـ
+`laravel/breeze` لـ React+Inertia، والذي حلّ محله لاحقًا
+`laravel/react-starter-kit` الرسمي، وهو نفسه يعتمد على Fortify) كـ backend
+المصادقة للوحة الإدارة المبنية بـ Inertia — نفس لوحة الإدارة التي يحميها
+`routes/web.php` بـ `Route::middleware(['auth', 'verified'])` حول `dashboard`.
+الملف `config/fortify.php:145-149` هو المكان الذي فعّل فيه هذا المشروع أجزاء
+وعطّل أخرى: `Features::registration()` و`Features::resetPasswords()`
+و`Features::emailVerification()` مفعّلة؛ أما `Features::twoFactorAuthentication()`
+و`Features::passkeys()` — الموجودة في إعدادات الـ starter kit الأصلي — فقد
+حُذفت تمامًا (انظر `04-auth-simplification-decision.md`).
 
-## What was the alternative, and why was it rejected?
+## ما البديل، ولماذا رُفض؟
 
-The two realistic alternatives were (1) hand-writing an
-`AuthenticatedSessionController` + `RegisteredUserController` from scratch,
-and (2) Laravel Breeze's classic (non-Fortify) scaffolding, which generates
-those controllers directly into `app/Http/Controllers/Auth/` for you to own
-and edit. Both were rejected for the same reason: this project's Phase 12
-goal is to learn the Inertia+React admin pattern, not to re-derive
-password-hashing, rate-limiting, and email-verification-token logic that
-Fortify already gets right (`app/Providers/FortifyServiceProvider.php:82-87`
-configures the login rate limiter in four lines instead of hand-rolling
-`RateLimiter::for()` wiring from scratch). Hand-written controllers would
-also mean every future auth feature (password confirmation, email
-verification) needs its own from-scratch controller and test, instead of a
-`Features::` array entry.
+البديلان الواقعيان كانا: (1) كتابة `AuthenticatedSessionController` و
+`RegisteredUserController` من الصفر يدويًا، و(2) scaffolding الكلاسيكي من
+Laravel Breeze (بدون Fortify)، والذي يولّد تلك الـ controllers مباشرة داخل
+`app/Http/Controllers/Auth/` لتمتلكها وتعدّلها بنفسك. رُفض كلاهما للسبب نفسه:
+هدف المرحلة 12 في هذا المشروع هو تعلّم نمط لوحة الإدارة بـ Inertia+React، وليس
+إعادة اشتقاق منطق تشفير كلمات المرور وتحديد معدل الطلبات (rate limiting) ورموز
+التحقق من البريد، وهو منطق يتقنه Fortify أصلًا
+(`app/Providers/FortifyServiceProvider.php:82-87` يضبط محدِّد معدل الدخول في
+أربعة أسطر بدل ربط `RateLimiter::for()` يدويًا من الصفر). الـ controllers
+المكتوبة يدويًا تعني أيضًا أن كل ميزة مصادقة مستقبلية (تأكيد كلمة المرور،
+التحقق من البريد) تحتاج controller واختبارًا خاصين بها من الصفر، بدل إضافة
+عنصر في مصفوفة `Features::`.
 
-## What breaks if it is removed?
+## ماذا ينكسر لو حُذف؟
 
-Removing `laravel/fortify` from `composer.json:11` and
-`FortifyServiceProvider::class` from `bootstrap/providers.php:8` would
-delete every route Fortify registers — `/login`, `/register`,
-`/forgot-password`, `/reset-password/{token}`, `/email/verify/{id}/{hash}`,
-`/user/confirm-password` all disappear from `php artisan route:list`. The
-`Login`, `Register`, etc. page components under `resources/js/pages/auth/`
-would still exist as files but have nothing to `Route::inertia()` them or
-handle their form submissions — visiting `/login` would 404, and
-`app/Actions/Fortify/CreateNewUser.php` and `ResetUserPassword.php` (which
-Fortify calls via `Fortify::createUsersUsing()` at
-`FortifyServiceProvider.php:43`) would become dead code with no caller.
+حذف `laravel/fortify` من `composer.json:11` و`FortifyServiceProvider::class` من
+`bootstrap/providers.php:8` سيحذف كل مسار يسجّله Fortify — `/login` و
+`/register` و`/forgot-password` و`/reset-password/{token}` و
+`/email/verify/{id}/{hash}` و`/user/confirm-password` كلها تختفي من
+`php artisan route:list`. مكوّنات صفحات `Login` و`Register` وغيرها تحت
+`resources/js/pages/auth/` ستبقى موجودة كملفات، لكن لن يوجد ما يعرضها أو يعالج
+إرسال نماذجها — زيارة `/login` ستُرجع 404، و`app/Actions/Fortify/CreateNewUser.php`
+و`ResetUserPassword.php` (اللذان يستدعيهما Fortify عبر `Fortify::createUsersUsing()`
+في `FortifyServiceProvider.php:43`) سيصبحان كودًا ميتًا بلا مستدعٍ.
 
-## What to read next
+## ماذا تقرأ بعد ذلك
 
-- `01-inertia-shared-props.md` — how the pages Fortify renders receive
-  `auth.user` without each controller passing it explicitly
-- `04-auth-simplification-decision.md` — which Fortify features this
-  project turned off, and why
+- `01-inertia-shared-props.md` — كيف تستلم الصفحات التي يعرضها Fortify
+  `auth.user` دون أن يمرره كل controller صراحةً
+- `04-auth-simplification-decision.md` — أي ميزات Fortify عطّلها هذا المشروع،
+  ولماذا

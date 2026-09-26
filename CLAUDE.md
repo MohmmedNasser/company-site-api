@@ -13,11 +13,14 @@ Software agency website. Goals in priority order:
 - Full plan lives in PROJECT-PLAN.md — read it before any task
 - Design system: violet-issue-DESIGN.md + docs/design-decisions.md
 - All docs, comments, and commits in English. Site content is bilingual.
+  Exception: the existing `docs/learning/` notes (01–08) are in Arabic.
 - No raw hex in components — design tokens only
 - No physical CSS properties (pl/pr/left/right) — logical only
 - Every new string goes into both ar.json and en.json
 - No fetch inside components — go through src/lib/content
-- Every Laravel file ships with docs/learning/ notes
+- docs/learning/ notes are no longer required — the laravel-teach skill is
+  disabled (.claude/skills/laravel-teach/SKILL.md.disabled). Do not create
+  new learning notes unless explicitly asked.
 - Every animation respects prefers-reduced-motion
 - Next.js 16: params is a Promise; the file is proxy.ts, not middleware.ts
 - Marketing site uses the extended spacing/motion scale; the admin panel uses
@@ -25,8 +28,9 @@ Software agency website. Goals in priority order:
 
 ## Current State
 
-Phase: 4 — Hero: Interactive Background + Parallax
-Branch: master
+Frontend (Track A): Phases 0–8 done — live at https://codexastudio.vercel.app/
+Backend (Track B): Phase 10 — Data Modeling complete; next is Phase 11 — Public JSON API
+Branch: main
 
 ## Commit Convention
 

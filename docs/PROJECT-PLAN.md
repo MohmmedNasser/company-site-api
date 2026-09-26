@@ -422,6 +422,8 @@ Reference for blog structure and depth: `https://apex.ps/en/blog`.
 
 > **Binding rule for every phase below:** every file, function, or package added must ship with an explanation in `docs/learning/NN-topic.md` answering: **What is it? · Why is it here? · What was the alternative and why was it rejected? · What breaks if it is removed?**
 > This is enforced automatically by the `laravel-teach` skill.
+>
+> **Update (2026-09-26):** this rule and the `laravel-teach` skill are suspended from Phase 11 onward. Notes 01–08 remain as written; no new notes are created unless explicitly requested.
 
 ---
 
