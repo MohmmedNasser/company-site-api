@@ -21,5 +21,21 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        // Clients first: projects and testimonials both carry a client_id
+        // foreign key.
+        $this->call([
+            ClientSeeder::class,
+            ServiceSeeder::class,
+            ProjectSeeder::class,
+            TestimonialSeeder::class,
+            ProcessStepSeeder::class,
+            FaqItemSeeder::class,
+            PostSeeder::class,
+            TeamMemberSeeder::class,
+            ValueSeeder::class,
+            TimelineSeeder::class,
+            SiteSettingSeeder::class,
+        ]);
     }
 }

@@ -505,3 +505,59 @@ to the frontend, which the PROJECT-PLAN.md bilingual requirement (`ar`/`en`
 content) will need once the admin panel starts rendering translated
 fields. Left as-is for Phase 13, per the auth-simplification task's scope —
 noted here so it isn't forgotten.
+
+---
+
+## 9. Phase 10 data model — the real table list, superseding PROJECT-PLAN.md's sketch
+
+`docs/PROJECT-PLAN.md` §"Phase 10" sketched eight tables (`services`
+`projects` `testimonials` `clients` `posts` `categories` `contact_messages`
+`settings` `users`) as a placeholder before the frontend's content
+contract (`docs/content-reference/`) existed. That sketch is now
+superseded by what was actually built, read directly off
+`docs/content-reference/types.ts`, `repository.ts`, and `mock-repository.ts`:
+
+| Table                       | Notable columns                                                                                | Notes                                                              |
+| ---------------------------- | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------- |
+| `clients`                    | `id` (string PK), `logo`, `url`, `order`, `name` (json)                                          | no dependents seeded before it                                     |
+| `services`                   | `id` (string PK), `slug` (unique), `icon`, `image`, `categories` (json array), `order`, `title`/`excerpt`/`body` (json) | `categories` is plain English tags, not localized, no separate tags table |
+| `projects`                   | `id` (string PK), `slug` (unique), `category`, `status` (enum), `client_id` (FK → `clients.id`), `cover_image`, `order`, `title`/`summary`/`description` (json) | |
+| `testimonials`               | `id` (string PK), `client_id` (FK → `clients.id`), `avatar`, `rating` (decimal 2,1), `order`, `author`/`role`/`quote` (json) | |
+| `process_steps`              | `id` (string PK), `icon`, `order`, `title`/`description` (json)                                 | no slug/body — no detail page                                      |
+| `faq_items`                  | `id` (string PK), `order`, `question`/`answer` (json)                                            | no slug/body — no detail page                                      |
+| `posts`                      | `id` (string PK), `slug` (unique), `cover_image`, `published_at` (date), `order`, `author` (json), `title`/`excerpt`/`body` (json) | |
+| `team_members`               | `id` (string PK), `avatar`, `order`, `name`/`role`/`bio` (json)                                  | `/about` page content                                              |
+| `values`                     | `id` (string PK), `icon`, `order`, `title`/`description` (json)                                  | `/about` page content; model is `ValueItem`, table stays `values`   |
+| `timeline`                   | `id` (string PK), `year` (string, Western digits), `status` (enum), `order`, `title`/`description` (json) | `/about` page content; model is `TimelineEntry`, table stays `timeline` |
+| `site_settings`              | `id` (int, `CHECK (id = 1)`), `hero`/`sections`/`pages`/`contact`/`newsletter`/`social` (json)   | singleton — see `docs/learning/08-settings-singleton.md`            |
+| `contact_messages`           | `id` (auto-increment), `name`, `email`, `service`, `budget`, `message`, `read_at`, `archived_at`, `created_at` (no `updated_at`) | Phase 13 admin inbox; endpoint not built yet                       |
+| `newsletter_subscriptions`   | `id` (auto-increment), `email` (unique), `created_at` (no `updated_at`)                          | endpoint not built yet                                              |
+
+**No `categories` table.** `Service.categories` is a plain JSON array of
+practitioner-term tags (`"Next.js"`, `"CI/CD"`) cast to a PHP array — not a
+relational lookup table, since the mock data never treats them as a shared,
+queryable taxonomy.
+
+**No `settings` table** in the PROJECT-PLAN.md sense of scattered rows —
+it's `site_settings`, a one-row table (§ above).
+
+**`users`** already existed from Phase 9's Laravel scaffold and needed no
+changes for this phase.
+
+### The snake_case-DB / camelCase-API naming split
+
+Every column and table in the list above is `snake_case`
+(`client_id`, `cover_image`, `published_at`) — ordinary Laravel/MySQL
+convention. `docs/content-reference/types.ts` uses `camelCase` for the same
+concepts (`clientId`, `coverImage`, `publishedAt`). This is a deliberate,
+deferred translation, not an inconsistency to fix now: Phase 11's API
+Resource layer is where `snake_case` columns become `camelCase` JSON keys
+(`ProjectResource` reading `$this->cover_image` and emitting
+`"coverImage"`), matching `docs/content-reference/types.ts` field-for-field
+on the wire while the database underneath keeps the naming convention
+every other Laravel file in this project already uses. Fighting Laravel's
+`snake_case` convention inside the schema itself — naming a column
+`coverImage` to save a rename later — was rejected because every Eloquent
+default (relationship method names, `casts()` keys, migration helpers)
+assumes `snake_case`, and camelCase columns would fight that convention on
+every other file, not just this one.
