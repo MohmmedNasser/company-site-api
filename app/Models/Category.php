@@ -3,15 +3,16 @@
 namespace App\Models;
 
 use App\Concerns\HasLocalizedFields;
-use Database\Factories\ServiceFactory;
+use Database\Factories\CategoryFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['id', 'slug', 'icon', 'image', 'categories', 'order', 'title', 'excerpt', 'body'])]
-class Service extends Model
+#[Fillable(['id', 'order', 'name'])]
+class Category extends Model
 {
-    /** @use HasFactory<ServiceFactory> */
+    /** @use HasFactory<CategoryFactory> */
     use HasFactory, HasLocalizedFields;
 
     public $incrementing = false;
@@ -21,11 +22,13 @@ class Service extends Model
     protected function casts(): array
     {
         return [
-            'categories' => 'array',
             'order' => 'integer',
-            'title' => 'array',
-            'excerpt' => 'array',
-            'body' => 'array',
+            'name' => 'array',
         ];
+    }
+
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class);
     }
 }

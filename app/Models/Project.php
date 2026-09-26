@@ -4,14 +4,17 @@ namespace App\Models;
 
 use App\Concerns\HasLocalizedFields;
 use App\Enums\ProjectStatus;
+use Database\Factories\ProjectFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['id', 'slug', 'category', 'status', 'client_id', 'cover_image', 'order', 'title', 'summary', 'description'])]
+#[Fillable(['id', 'slug', 'category_id', 'status', 'client_id', 'cover_image', 'order', 'title', 'summary', 'description'])]
 class Project extends Model
 {
-    use HasLocalizedFields;
+    /** @use HasFactory<ProjectFactory> */
+    use HasFactory, HasLocalizedFields;
 
     public $incrementing = false;
 
@@ -26,6 +29,11 @@ class Project extends Model
             'summary' => 'array',
             'description' => 'array',
         ];
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 
     public function client(): BelongsTo

@@ -4,13 +4,16 @@ namespace App\Models;
 
 use App\Concerns\HasLocalizedFields;
 use App\Enums\TimelineStatus;
+use Database\Factories\TimelineEntryFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 #[Fillable(['id', 'year', 'status', 'order', 'title', 'description'])]
 class TimelineEntry extends Model
 {
-    use HasLocalizedFields;
+    /** @use HasFactory<TimelineEntryFactory> */
+    use HasFactory, HasLocalizedFields;
 
     // Eloquent's default table name for TimelineEntry would be
     // "timeline_entries" — overridden because the content contract and

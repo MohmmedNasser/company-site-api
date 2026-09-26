@@ -32,7 +32,14 @@ return new class extends Migration
         // enforced CHECK constraints since 8.0.16 (earlier versions parsed but
         // silently ignored them), so this only bites during a real INSERT
         // attempt against the second row, not at migration time.
-        DB::statement('ALTER TABLE site_settings ADD CONSTRAINT site_settings_singleton_check CHECK (id = 1)');
+        //
+        // Skipped on SQLite (the in-memory test database, see phpunit.xml):
+        // SQLite cannot add a constraint to an existing table via ALTER
+        // TABLE. Production and local dev both run MySQL, so the guarantee
+        // still holds wherever real data lives.
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE site_settings ADD CONSTRAINT site_settings_singleton_check CHECK (id = 1)');
+        }
     }
 
     /**

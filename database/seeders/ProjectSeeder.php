@@ -10,7 +10,8 @@ class ProjectSeeder extends Seeder
 {
     /**
      * Seed the projects table from the frontend's mock content. Depends on
-     * ClientSeeder having already run — client_id is a foreign key.
+     * CategorySeeder and ClientSeeder having already run — category_id and
+     * client_id are both foreign keys.
      */
     public function run(): void
     {
@@ -23,7 +24,9 @@ class ProjectSeeder extends Seeder
             Project::create([
                 'id' => $project['id'],
                 'slug' => $project['slug'],
-                'category' => $project['category'],
+                // Same key-rename as client below: mock "category" becomes
+                // the category_id foreign key.
+                'category_id' => $project['category'],
                 'status' => $project['status'],
                 // mock JSON key is "client" (types.ts: Project.client), DB
                 // column is "client_id" per the snake_case-DB naming rule.

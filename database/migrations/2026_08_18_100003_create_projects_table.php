@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->string('slug')->unique();
-            $table->string('category');
+            // Indexed automatically by the foreign key below — the
+            // /api/v1/projects?category= filter queries this column.
+            $table->string('category_id');
             $table->enum('status', ['shipped', 'in-development']);
             $table->string('client_id');
             $table->string('cover_image');
@@ -24,6 +26,7 @@ return new class extends Migration
             $table->json('description');
             $table->timestamps();
 
+            $table->foreign('category_id')->references('id')->on('categories');
             $table->foreign('client_id')->references('id')->on('clients');
         });
     }

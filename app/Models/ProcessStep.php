@@ -3,13 +3,16 @@
 namespace App\Models;
 
 use App\Concerns\HasLocalizedFields;
+use Database\Factories\ProcessStepFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 #[Fillable(['id', 'icon', 'order', 'title', 'description'])]
 class ProcessStep extends Model
 {
-    use HasLocalizedFields;
+    /** @use HasFactory<ProcessStepFactory> */
+    use HasFactory, HasLocalizedFields;
 
     public $incrementing = false;
 

@@ -3,14 +3,17 @@
 namespace App\Models;
 
 use App\Concerns\HasLocalizedFields;
+use Database\Factories\TestimonialFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable(['id', 'client_id', 'avatar', 'rating', 'order', 'author', 'role', 'quote'])]
 class Testimonial extends Model
 {
-    use HasLocalizedFields;
+    /** @use HasFactory<TestimonialFactory> */
+    use HasFactory, HasLocalizedFields;
 
     public $incrementing = false;
 

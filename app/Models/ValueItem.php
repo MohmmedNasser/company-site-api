@@ -3,13 +3,16 @@
 namespace App\Models;
 
 use App\Concerns\HasLocalizedFields;
+use Database\Factories\ValueItemFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 #[Fillable(['id', 'icon', 'order', 'title', 'description'])]
 class ValueItem extends Model
 {
-    use HasLocalizedFields;
+    /** @use HasFactory<ValueItemFactory> */
+    use HasFactory, HasLocalizedFields;
 
     // Eloquent's default table name for ValueItem would be "value_items"
     // (snake_case plural of the class name) — overridden because the

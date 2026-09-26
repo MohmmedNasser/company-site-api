@@ -22,9 +22,10 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
-        // Clients first: projects and testimonials both carry a client_id
-        // foreign key.
+        // Categories and clients first: projects carry category_id and
+        // client_id foreign keys, testimonials carry client_id.
         $this->call([
+            CategorySeeder::class,
             ClientSeeder::class,
             ServiceSeeder::class,
             ProjectSeeder::class,

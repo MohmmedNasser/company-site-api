@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
+use Database\Factories\ContactMessageFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 #[Fillable(['name', 'email', 'service', 'budget', 'message'])]
 class ContactMessage extends Model
 {
+    /** @use HasFactory<ContactMessageFactory> */
+    use HasFactory;
+
     // The table has created_at but no updated_at column (a contact
     // message is never edited after submission). Setting UPDATED_AT to
     // null tells Eloquent not to write that column, while created_at is

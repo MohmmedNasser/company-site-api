@@ -3,13 +3,16 @@
 namespace App\Models;
 
 use App\Concerns\HasLocalizedFields;
+use Database\Factories\FaqItemFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 #[Fillable(['id', 'order', 'question', 'answer'])]
 class FaqItem extends Model
 {
-    use HasLocalizedFields;
+    /** @use HasFactory<FaqItemFactory> */
+    use HasFactory, HasLocalizedFields;
 
     public $incrementing = false;
 

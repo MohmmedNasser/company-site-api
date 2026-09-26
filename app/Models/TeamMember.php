@@ -3,13 +3,16 @@
 namespace App\Models;
 
 use App\Concerns\HasLocalizedFields;
+use Database\Factories\TeamMemberFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 #[Fillable(['id', 'avatar', 'order', 'name', 'role', 'bio'])]
 class TeamMember extends Model
 {
-    use HasLocalizedFields;
+    /** @use HasFactory<TeamMemberFactory> */
+    use HasFactory, HasLocalizedFields;
 
     public $incrementing = false;
 

@@ -3,13 +3,17 @@
 namespace App\Models;
 
 use App\Concerns\HasLocalizedFields;
+use Database\Factories\ClientFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable(['id', 'logo', 'url', 'order', 'name'])]
 class Client extends Model
 {
-    use HasLocalizedFields;
+    /** @use HasFactory<ClientFactory> */
+    use HasFactory, HasLocalizedFields;
 
     public $incrementing = false;
 
@@ -21,5 +25,15 @@ class Client extends Model
             'order' => 'integer',
             'name' => 'array',
         ];
+    }
+
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class);
+    }
+
+    public function testimonials(): HasMany
+    {
+        return $this->hasMany(Testimonial::class);
     }
 }
