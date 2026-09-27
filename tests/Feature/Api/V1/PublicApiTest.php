@@ -2,10 +2,12 @@
 
 namespace Tests\Feature\Api\V1;
 
+use App\Mail\NewContactMessageReceived;
 use App\Models\ContactMessage;
 use App\Models\NewsletterSubscription;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use PHPUnit\Framework\Attributes\DataProvider;
 use RuntimeException;
@@ -162,6 +164,26 @@ class PublicApiTest extends TestCase
         $this->assertSame('sara@example.com', $message->email);
         $this->assertNull($message->service);
         $this->assertNull($message->read_at);
+    }
+
+    public function test_contact_queues_a_notification_email_to_the_admin(): void
+    {
+        Mail::fake();
+
+        $this->postJson('/api/v1/contact', [
+            'name' => 'Sara',
+            'email' => 'sara@example.com',
+            'service' => 'Web Development',
+            'message' => 'We need a marketing site.',
+        ])->assertCreated();
+
+        $stored = ContactMessage::sole();
+
+        Mail::assertQueued(
+            NewContactMessageReceived::class,
+            fn (NewContactMessageReceived $mail) => $mail->contactMessage->is($stored)
+                && $mail->hasTo(config('admin.email'))
+        );
     }
 
     public function test_contact_rejects_an_invalid_payload_with_the_error_envelope(): void

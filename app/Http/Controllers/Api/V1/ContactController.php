@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\ContactRequest;
+use App\Mail\NewContactMessageReceived;
 use App\Models\ContactMessage;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Mail;
 use Symfony\Component\HttpFoundation\Response;
 
 class ContactController extends Controller
@@ -18,7 +20,12 @@ class ContactController extends Controller
      */
     public function store(ContactRequest $request): JsonResponse
     {
-        ContactMessage::create($request->validated());
+        $message = ContactMessage::create($request->validated());
+
+        // queue(), not send(): the job is written to the `jobs` table and
+        // this request returns immediately, regardless of whether the mail
+        // driver is reachable.
+        Mail::to(config('admin.email'))->queue(new NewContactMessageReceived($message));
 
         // Body is ContactResult, wrapped in `data` like every other success.
         return response()->json(['data' => ['success' => true]], Response::HTTP_CREATED);
