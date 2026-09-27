@@ -171,4 +171,84 @@ class ContentCrudTest extends TestCase
                 ->where('fields', fn ($fields) => collect($fields)->contains('type', 'localized')));
         }
     }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function clientPayload(array $overrides = []): array
+    {
+        return [
+            'name' => ['en' => 'Test Client', 'ar' => 'عميل تجريبي'],
+            'url' => 'https://example.com',
+            'logo' => UploadedFile::fake()->image('logo.png', 400, 400),
+            ...$overrides,
+        ];
+    }
+
+    public function test_replacing_and_deleting_a_service_cleans_up_its_thumbnail_too(): void
+    {
+        $this->post('/admin/services', $this->servicePayload())->assertSessionHasNoErrors();
+        $service = Service::findOrFail('svc-test-service');
+        $firstImage = $service->image;
+        $firstThumbnail = 'thumbnails/'.$firstImage;
+        Storage::disk('public')->assertExists($firstImage);
+        Storage::disk('public')->assertExists($firstThumbnail);
+
+        $this->post('/admin/services/svc-test-service', $this->servicePayload([
+            '_method' => 'put',
+            'image' => UploadedFile::fake()->image('second.jpg'),
+        ]))->assertRedirect('/admin/services');
+
+        $service->refresh();
+        Storage::disk('public')->assertMissing($firstImage);
+        Storage::disk('public')->assertMissing($firstThumbnail);
+        Storage::disk('public')->assertExists($service->image);
+        Storage::disk('public')->assertExists('thumbnails/'.$service->image);
+
+        $this->delete('/admin/services/svc-test-service')->assertRedirect('/admin/services');
+        Storage::disk('public')->assertMissing($service->image);
+        Storage::disk('public')->assertMissing('thumbnails/'.$service->image);
+    }
+
+    public function test_the_index_table_shows_the_thumbnail_while_the_edit_form_shows_the_full_image(): void
+    {
+        $this->post('/admin/services', $this->servicePayload())->assertSessionHasNoErrors();
+        $service = Service::findOrFail('svc-test-service');
+
+        // Appended after the six seeded services, so it lands at order 7
+        // (index 6 on an unfiltered, unpaginated index).
+        $this->get('/admin/services')->assertInertia(fn (Assert $page) => $page
+            ->where('records.6.id', 'svc-test-service')
+            ->where(
+                'records.6.image_url',
+                Storage::disk('public')->url('thumbnails/'.$service->image),
+            ));
+
+        $this->get('/admin/services/svc-test-service/edit')->assertInertia(fn (Assert $page) => $page
+            ->where('record.image_url', Storage::disk('public')->url($service->image)));
+    }
+
+    public function test_replacing_and_deleting_a_client_cleans_up_its_thumbnail_too(): void
+    {
+        $this->post('/admin/clients', $this->clientPayload())->assertSessionHasNoErrors();
+        $client = Client::query()->where('id', 'client-test-client')->firstOrFail();
+        $firstLogo = $client->logo;
+        Storage::disk('public')->assertExists($firstLogo);
+        Storage::disk('public')->assertExists('thumbnails/'.$firstLogo);
+
+        $this->post("/admin/clients/{$client->id}", $this->clientPayload([
+            '_method' => 'put',
+            'logo' => UploadedFile::fake()->image('new-logo.png', 400, 400),
+        ]))->assertRedirect('/admin/clients');
+
+        $client->refresh();
+        Storage::disk('public')->assertMissing($firstLogo);
+        Storage::disk('public')->assertMissing('thumbnails/'.$firstLogo);
+        Storage::disk('public')->assertExists($client->logo);
+        Storage::disk('public')->assertExists('thumbnails/'.$client->logo);
+
+        $this->delete("/admin/clients/{$client->id}")->assertRedirect('/admin/clients');
+        Storage::disk('public')->assertMissing($client->logo);
+        Storage::disk('public')->assertMissing('thumbnails/'.$client->logo);
+    }
 }

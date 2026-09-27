@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\StoreTestimonialRequest;
 use App\Http\Requests\Admin\UpdateTestimonialRequest;
 use App\Models\Client;
 use App\Models\Testimonial;
+use App\Services\ImageUploadService;
 use App\Support\Media;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -80,7 +81,7 @@ class TestimonialController extends Controller
         $testimonial->save();
 
         if ($request->hasFile('avatar')) {
-            Media::delete($previousAvatar);
+            ImageUploadService::delete($previousAvatar);
         }
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Testimonial saved.']);
@@ -116,7 +117,7 @@ class TestimonialController extends Controller
     public function destroy(Testimonial $testimonial): RedirectResponse
     {
         $testimonial->delete();
-        Media::delete($testimonial->avatar);
+        ImageUploadService::delete($testimonial->avatar);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Testimonial deleted.']);
 
@@ -196,7 +197,8 @@ class TestimonialController extends Controller
      * The index table only shows an avatar, author, client, and rating,
      * so this leaves out the quote text that present() sends the edit
      * form — no point shipping every testimonial's full quote to a table
-     * that never renders it.
+     * that never renders it. `avatar_url` is the thumbnail here; present()
+     * sends the full image for the edit form.
      *
      * @param  array<string, string>  $clients  id => label
      * @return array<string, mixed>
@@ -209,7 +211,7 @@ class TestimonialController extends Controller
             'author' => $testimonial->author,
             'client_label' => $clients[$testimonial->client_id] ?? $testimonial->client_id,
             'rating' => $testimonial->rating,
-            'avatar_url' => Media::url($testimonial->avatar),
+            'avatar_url' => ImageUploadService::thumbnailUrl($testimonial->avatar),
         ];
     }
 
@@ -237,7 +239,7 @@ class TestimonialController extends Controller
         $testimonial->quote = $data['quote'];
 
         if ($request->file('avatar') instanceof UploadedFile) {
-            $testimonial->avatar = Media::store($request->file('avatar'), 'testimonials');
+            $testimonial->avatar = ImageUploadService::store($request->file('avatar'), 'testimonials');
         }
     }
 }

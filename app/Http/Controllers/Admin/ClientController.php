@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreClientRequest;
 use App\Http\Requests\Admin\UpdateClientRequest;
 use App\Models\Client;
+use App\Services\ImageUploadService;
 use App\Support\Media;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -29,7 +30,7 @@ class ClientController extends Controller
                 ['key' => 'name', 'label' => 'Name', 'type' => 'localized'],
                 ['key' => 'url', 'label' => 'Website', 'type' => 'text'],
             ],
-            'records' => $clients->map(fn (Client $client) => $this->present($client))->values(),
+            'records' => $clients->map(fn (Client $client) => $this->presentForList($client))->values(),
             'pagination' => null,
             'filters' => ['search' => ''],
         ]);
@@ -77,7 +78,7 @@ class ClientController extends Controller
         $client->save();
 
         if ($request->hasFile('logo')) {
-            Media::delete($previousLogo);
+            ImageUploadService::delete($previousLogo);
         }
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Client saved.']);
@@ -125,7 +126,7 @@ class ClientController extends Controller
         }
 
         $client->delete();
-        Media::delete($client->logo);
+        ImageUploadService::delete($client->logo);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Client deleted.']);
 
@@ -173,6 +174,25 @@ class ClientController extends Controller
         ];
     }
 
+    /**
+     * The index table only shows a logo, name, and website, so this is a
+     * subset of present() — kept as its own method (matching the other
+     * five image-bearing controllers) because `logo_url` is the thumbnail
+     * here, not the full logo present() sends the edit form.
+     *
+     * @return array<string, mixed>
+     */
+    private function presentForList(Client $client): array
+    {
+        return [
+            'id' => $client->id,
+            'order' => $client->order,
+            'name' => $client->name,
+            'url' => $client->url,
+            'logo_url' => ImageUploadService::thumbnailUrl($client->logo),
+        ];
+    }
+
     private function generateId(string $name): string
     {
         $base = Str::of('client-'.Str::slug($name))->limit(80, '')->rtrim('-')->toString();
@@ -194,7 +214,7 @@ class ClientController extends Controller
         $client->url = $data['url'];
 
         if ($request->file('logo') instanceof UploadedFile) {
-            $client->logo = Media::store($request->file('logo'), 'clients');
+            $client->logo = ImageUploadService::store($request->file('logo'), 'clients');
         }
     }
 }

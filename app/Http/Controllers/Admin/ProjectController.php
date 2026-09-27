@@ -9,6 +9,7 @@ use App\Http\Requests\Admin\UpdateProjectRequest;
 use App\Models\Category;
 use App\Models\Client;
 use App\Models\Project;
+use App\Services\ImageUploadService;
 use App\Support\Media;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -89,7 +90,7 @@ class ProjectController extends Controller
         $project->save();
 
         if ($request->hasFile('cover_image')) {
-            Media::delete($previousImage);
+            ImageUploadService::delete($previousImage);
         }
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Project saved.']);
@@ -125,7 +126,7 @@ class ProjectController extends Controller
     public function destroy(Project $project): RedirectResponse
     {
         $project->delete();
-        Media::delete($project->cover_image);
+        ImageUploadService::delete($project->cover_image);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Project deleted.']);
 
@@ -225,7 +226,8 @@ class ProjectController extends Controller
      * The index table only shows a cover image, title, category, and
      * status, so this leaves out the summary/description text that
      * present() sends the edit form — no point shipping every project's
-     * full copy to a table that never renders it.
+     * full copy to a table that never renders it. `cover_image_url` is the
+     * thumbnail here; present() sends the full image for the edit form.
      *
      * @param  array<string, string>  $categories  id => label
      * @return array<string, mixed>
@@ -238,7 +240,7 @@ class ProjectController extends Controller
             'title' => $project->title,
             'category_label' => $categories[$project->category_id] ?? $project->category_id,
             'status' => $project->status->value,
-            'cover_image_url' => Media::url($project->cover_image),
+            'cover_image_url' => ImageUploadService::thumbnailUrl($project->cover_image),
         ];
     }
 
@@ -268,7 +270,7 @@ class ProjectController extends Controller
         $project->description = $data['description'];
 
         if ($request->file('cover_image') instanceof UploadedFile) {
-            $project->cover_image = Media::store($request->file('cover_image'), 'projects');
+            $project->cover_image = ImageUploadService::store($request->file('cover_image'), 'projects');
         }
     }
 

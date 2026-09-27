@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreServiceRequest;
 use App\Http\Requests\Admin\UpdateServiceRequest;
 use App\Models\Service;
+use App\Services\ImageUploadService;
 use App\Support\Media;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -89,9 +90,9 @@ class ServiceController extends Controller
         $service->save();
 
         // Only after the row points at the new file is the old one safe to
-        // remove; Media::delete() ignores legacy external URLs.
+        // remove; ImageUploadService::delete() ignores legacy external URLs.
         if ($request->hasFile('image')) {
-            Media::delete($previousImage);
+            ImageUploadService::delete($previousImage);
         }
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Service saved.']);
@@ -133,7 +134,7 @@ class ServiceController extends Controller
     public function destroy(Service $service): RedirectResponse
     {
         $service->delete();
-        Media::delete($service->image);
+        ImageUploadService::delete($service->image);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Service deleted.']);
 
@@ -201,7 +202,9 @@ class ServiceController extends Controller
      * The index table only shows an image, title, and slug, so this
      * leaves out the excerpt/body text that present() sends the edit
      * form — no point shipping every service's full copy to a table
-     * that never renders it.
+     * that never renders it. `image_url` is the thumbnail here (a row
+     * preview doesn't need the full original); present() above sends the
+     * full image for the edit form's own preview.
      *
      * @return array<string, mixed>
      */
@@ -212,7 +215,7 @@ class ServiceController extends Controller
             'order' => $service->order,
             'title' => $service->title,
             'slug' => $service->slug,
-            'image_url' => Media::url($service->image),
+            'image_url' => ImageUploadService::thumbnailUrl($service->image),
         ];
     }
 
@@ -245,7 +248,7 @@ class ServiceController extends Controller
         $service->body = $data['body'];
 
         if ($request->file('image') instanceof UploadedFile) {
-            $service->image = Media::store($request->file('image'), 'services');
+            $service->image = ImageUploadService::store($request->file('image'), 'services');
         }
     }
 

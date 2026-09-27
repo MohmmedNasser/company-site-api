@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreTeamMemberRequest;
 use App\Http\Requests\Admin\UpdateTeamMemberRequest;
 use App\Models\TeamMember;
+use App\Services\ImageUploadService;
 use App\Support\Media;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -29,7 +30,7 @@ class TeamMemberController extends Controller
                 ['key' => 'name', 'label' => 'Name', 'type' => 'localized'],
                 ['key' => 'role', 'label' => 'Role', 'type' => 'localized'],
             ],
-            'records' => $members->map(fn (TeamMember $member) => $this->present($member))->values(),
+            'records' => $members->map(fn (TeamMember $member) => $this->presentForList($member))->values(),
             'pagination' => null,
             'filters' => ['search' => ''],
         ]);
@@ -77,7 +78,7 @@ class TeamMemberController extends Controller
         $teamMember->save();
 
         if ($request->hasFile('avatar')) {
-            Media::delete($previousAvatar);
+            ImageUploadService::delete($previousAvatar);
         }
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Team member saved.']);
@@ -113,7 +114,7 @@ class TeamMemberController extends Controller
     public function destroy(TeamMember $teamMember): RedirectResponse
     {
         $teamMember->delete();
-        Media::delete($teamMember->avatar);
+        ImageUploadService::delete($teamMember->avatar);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Team member deleted.']);
 
@@ -163,6 +164,25 @@ class TeamMemberController extends Controller
         ];
     }
 
+    /**
+     * The index table only shows an avatar, name, and role, so this is a
+     * subset of present() — kept as its own method (matching the other
+     * five image-bearing controllers) because `avatar_url` is the
+     * thumbnail here, not the full avatar present() sends the edit form.
+     *
+     * @return array<string, mixed>
+     */
+    private function presentForList(TeamMember $member): array
+    {
+        return [
+            'id' => $member->id,
+            'order' => $member->order,
+            'name' => $member->name,
+            'role' => $member->role,
+            'avatar_url' => ImageUploadService::thumbnailUrl($member->avatar),
+        ];
+    }
+
     private function generateId(string $name): string
     {
         $base = Str::of('team-'.Str::slug($name))->limit(80, '')->rtrim('-')->toString();
@@ -185,7 +205,7 @@ class TeamMemberController extends Controller
         $member->bio = $data['bio'];
 
         if ($request->file('avatar') instanceof UploadedFile) {
-            $member->avatar = Media::store($request->file('avatar'), 'team-members');
+            $member->avatar = ImageUploadService::store($request->file('avatar'), 'team-members');
         }
     }
 }

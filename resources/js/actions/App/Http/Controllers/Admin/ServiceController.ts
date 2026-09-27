@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Admin\ServiceController::index
- * @see app/Http/Controllers/Admin/ServiceController.php:28
+ * @see app/Http/Controllers/Admin/ServiceController.php:29
  * @route '/admin/services'
  */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\ServiceController::index
- * @see app/Http/Controllers/Admin/ServiceController.php:28
+ * @see app/Http/Controllers/Admin/ServiceController.php:29
  * @route '/admin/services'
  */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\ServiceController::index
- * @see app/Http/Controllers/Admin/ServiceController.php:28
+ * @see app/Http/Controllers/Admin/ServiceController.php:29
  * @route '/admin/services'
  */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Admin\ServiceController::index
- * @see app/Http/Controllers/Admin/ServiceController.php:28
+ * @see app/Http/Controllers/Admin/ServiceController.php:29
  * @route '/admin/services'
  */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\Admin\ServiceController::index
- * @see app/Http/Controllers/Admin/ServiceController.php:28
+ * @see app/Http/Controllers/Admin/ServiceController.php:29
  * @route '/admin/services'
  */
     const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\Admin\ServiceController::index
- * @see app/Http/Controllers/Admin/ServiceController.php:28
+ * @see app/Http/Controllers/Admin/ServiceController.php:29
  * @route '/admin/services'
  */
         indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\Admin\ServiceController::index
- * @see app/Http/Controllers/Admin/ServiceController.php:28
+ * @see app/Http/Controllers/Admin/ServiceController.php:29
  * @route '/admin/services'
  */
         indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     index.form = indexForm
 /**
 * @see \App\Http\Controllers\Admin\ServiceController::create
- * @see app/Http/Controllers/Admin/ServiceController.php:50
+ * @see app/Http/Controllers/Admin/ServiceController.php:51
  * @route '/admin/services/create'
  */
 export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -94,7 +94,7 @@ create.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\ServiceController::create
- * @see app/Http/Controllers/Admin/ServiceController.php:50
+ * @see app/Http/Controllers/Admin/ServiceController.php:51
  * @route '/admin/services/create'
  */
 create.url = (options?: RouteQueryOptions) => {
@@ -103,7 +103,7 @@ create.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\ServiceController::create
- * @see app/Http/Controllers/Admin/ServiceController.php:50
+ * @see app/Http/Controllers/Admin/ServiceController.php:51
  * @route '/admin/services/create'
  */
 create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -112,7 +112,7 @@ create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Admin\ServiceController::create
- * @see app/Http/Controllers/Admin/ServiceController.php:50
+ * @see app/Http/Controllers/Admin/ServiceController.php:51
  * @route '/admin/services/create'
  */
 create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -122,7 +122,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\Admin\ServiceController::create
- * @see app/Http/Controllers/Admin/ServiceController.php:50
+ * @see app/Http/Controllers/Admin/ServiceController.php:51
  * @route '/admin/services/create'
  */
     const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -132,7 +132,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\Admin\ServiceController::create
- * @see app/Http/Controllers/Admin/ServiceController.php:50
+ * @see app/Http/Controllers/Admin/ServiceController.php:51
  * @route '/admin/services/create'
  */
         createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -141,7 +141,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\Admin\ServiceController::create
- * @see app/Http/Controllers/Admin/ServiceController.php:50
+ * @see app/Http/Controllers/Admin/ServiceController.php:51
  * @route '/admin/services/create'
  */
         createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -157,7 +157,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     create.form = createForm
 /**
 * @see \App\Http\Controllers\Admin\ServiceController::store
- * @see app/Http/Controllers/Admin/ServiceController.php:59
+ * @see app/Http/Controllers/Admin/ServiceController.php:60
  * @route '/admin/services'
  */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -172,7 +172,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\ServiceController::store
- * @see app/Http/Controllers/Admin/ServiceController.php:59
+ * @see app/Http/Controllers/Admin/ServiceController.php:60
  * @route '/admin/services'
  */
 store.url = (options?: RouteQueryOptions) => {
@@ -181,7 +181,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\ServiceController::store
- * @see app/Http/Controllers/Admin/ServiceController.php:59
+ * @see app/Http/Controllers/Admin/ServiceController.php:60
  * @route '/admin/services'
  */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -191,7 +191,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
     /**
 * @see \App\Http\Controllers\Admin\ServiceController::store
- * @see app/Http/Controllers/Admin/ServiceController.php:59
+ * @see app/Http/Controllers/Admin/ServiceController.php:60
  * @route '/admin/services'
  */
     const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -201,7 +201,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
             /**
 * @see \App\Http\Controllers\Admin\ServiceController::store
- * @see app/Http/Controllers/Admin/ServiceController.php:59
+ * @see app/Http/Controllers/Admin/ServiceController.php:60
  * @route '/admin/services'
  */
         storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -212,7 +212,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     store.form = storeForm
 /**
 * @see \App\Http\Controllers\Admin\ServiceController::edit
- * @see app/Http/Controllers/Admin/ServiceController.php:74
+ * @see app/Http/Controllers/Admin/ServiceController.php:75
  * @route '/admin/services/{service}/edit'
  */
 export const edit = (args: { service: string | { id: string } } | [service: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -227,7 +227,7 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\ServiceController::edit
- * @see app/Http/Controllers/Admin/ServiceController.php:74
+ * @see app/Http/Controllers/Admin/ServiceController.php:75
  * @route '/admin/services/{service}/edit'
  */
 edit.url = (args: { service: string | { id: string } } | [service: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
@@ -260,7 +260,7 @@ edit.url = (args: { service: string | { id: string } } | [service: string | { id
 
 /**
 * @see \App\Http\Controllers\Admin\ServiceController::edit
- * @see app/Http/Controllers/Admin/ServiceController.php:74
+ * @see app/Http/Controllers/Admin/ServiceController.php:75
  * @route '/admin/services/{service}/edit'
  */
 edit.get = (args: { service: string | { id: string } } | [service: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -269,7 +269,7 @@ edit.get = (args: { service: string | { id: string } } | [service: string | { id
 })
 /**
 * @see \App\Http\Controllers\Admin\ServiceController::edit
- * @see app/Http/Controllers/Admin/ServiceController.php:74
+ * @see app/Http/Controllers/Admin/ServiceController.php:75
  * @route '/admin/services/{service}/edit'
  */
 edit.head = (args: { service: string | { id: string } } | [service: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -279,7 +279,7 @@ edit.head = (args: { service: string | { id: string } } | [service: string | { i
 
     /**
 * @see \App\Http\Controllers\Admin\ServiceController::edit
- * @see app/Http/Controllers/Admin/ServiceController.php:74
+ * @see app/Http/Controllers/Admin/ServiceController.php:75
  * @route '/admin/services/{service}/edit'
  */
     const editForm = (args: { service: string | { id: string } } | [service: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -289,7 +289,7 @@ edit.head = (args: { service: string | { id: string } } | [service: string | { i
 
             /**
 * @see \App\Http\Controllers\Admin\ServiceController::edit
- * @see app/Http/Controllers/Admin/ServiceController.php:74
+ * @see app/Http/Controllers/Admin/ServiceController.php:75
  * @route '/admin/services/{service}/edit'
  */
         editForm.get = (args: { service: string | { id: string } } | [service: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -298,7 +298,7 @@ edit.head = (args: { service: string | { id: string } } | [service: string | { i
         })
             /**
 * @see \App\Http\Controllers\Admin\ServiceController::edit
- * @see app/Http/Controllers/Admin/ServiceController.php:74
+ * @see app/Http/Controllers/Admin/ServiceController.php:75
  * @route '/admin/services/{service}/edit'
  */
         editForm.head = (args: { service: string | { id: string } } | [service: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -314,7 +314,7 @@ edit.head = (args: { service: string | { id: string } } | [service: string | { i
     edit.form = editForm
 /**
 * @see \App\Http\Controllers\Admin\ServiceController::update
- * @see app/Http/Controllers/Admin/ServiceController.php:83
+ * @see app/Http/Controllers/Admin/ServiceController.php:84
  * @route '/admin/services/{service}'
  */
 export const update = (args: { service: string | { id: string } } | [service: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -329,7 +329,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\ServiceController::update
- * @see app/Http/Controllers/Admin/ServiceController.php:83
+ * @see app/Http/Controllers/Admin/ServiceController.php:84
  * @route '/admin/services/{service}'
  */
 update.url = (args: { service: string | { id: string } } | [service: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
@@ -362,7 +362,7 @@ update.url = (args: { service: string | { id: string } } | [service: string | { 
 
 /**
 * @see \App\Http\Controllers\Admin\ServiceController::update
- * @see app/Http/Controllers/Admin/ServiceController.php:83
+ * @see app/Http/Controllers/Admin/ServiceController.php:84
  * @route '/admin/services/{service}'
  */
 update.put = (args: { service: string | { id: string } } | [service: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -372,7 +372,7 @@ update.put = (args: { service: string | { id: string } } | [service: string | { 
 
     /**
 * @see \App\Http\Controllers\Admin\ServiceController::update
- * @see app/Http/Controllers/Admin/ServiceController.php:83
+ * @see app/Http/Controllers/Admin/ServiceController.php:84
  * @route '/admin/services/{service}'
  */
     const updateForm = (args: { service: string | { id: string } } | [service: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -387,7 +387,7 @@ update.put = (args: { service: string | { id: string } } | [service: string | { 
 
             /**
 * @see \App\Http\Controllers\Admin\ServiceController::update
- * @see app/Http/Controllers/Admin/ServiceController.php:83
+ * @see app/Http/Controllers/Admin/ServiceController.php:84
  * @route '/admin/services/{service}'
  */
         updateForm.put = (args: { service: string | { id: string } } | [service: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -403,7 +403,7 @@ update.put = (args: { service: string | { id: string } } | [service: string | { 
     update.form = updateForm
 /**
 * @see \App\Http\Controllers\Admin\ServiceController::move
- * @see app/Http/Controllers/Admin/ServiceController.php:108
+ * @see app/Http/Controllers/Admin/ServiceController.php:109
  * @route '/admin/services/{service}/move'
  */
 export const move = (args: { service: string | { id: string } } | [service: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -418,7 +418,7 @@ move.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\ServiceController::move
- * @see app/Http/Controllers/Admin/ServiceController.php:108
+ * @see app/Http/Controllers/Admin/ServiceController.php:109
  * @route '/admin/services/{service}/move'
  */
 move.url = (args: { service: string | { id: string } } | [service: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
@@ -451,7 +451,7 @@ move.url = (args: { service: string | { id: string } } | [service: string | { id
 
 /**
 * @see \App\Http\Controllers\Admin\ServiceController::move
- * @see app/Http/Controllers/Admin/ServiceController.php:108
+ * @see app/Http/Controllers/Admin/ServiceController.php:109
  * @route '/admin/services/{service}/move'
  */
 move.post = (args: { service: string | { id: string } } | [service: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -461,7 +461,7 @@ move.post = (args: { service: string | { id: string } } | [service: string | { i
 
     /**
 * @see \App\Http\Controllers\Admin\ServiceController::move
- * @see app/Http/Controllers/Admin/ServiceController.php:108
+ * @see app/Http/Controllers/Admin/ServiceController.php:109
  * @route '/admin/services/{service}/move'
  */
     const moveForm = (args: { service: string | { id: string } } | [service: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -471,7 +471,7 @@ move.post = (args: { service: string | { id: string } } | [service: string | { i
 
             /**
 * @see \App\Http\Controllers\Admin\ServiceController::move
- * @see app/Http/Controllers/Admin/ServiceController.php:108
+ * @see app/Http/Controllers/Admin/ServiceController.php:109
  * @route '/admin/services/{service}/move'
  */
         moveForm.post = (args: { service: string | { id: string } } | [service: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -482,7 +482,7 @@ move.post = (args: { service: string | { id: string } } | [service: string | { i
     move.form = moveForm
 /**
 * @see \App\Http\Controllers\Admin\ServiceController::destroy
- * @see app/Http/Controllers/Admin/ServiceController.php:133
+ * @see app/Http/Controllers/Admin/ServiceController.php:134
  * @route '/admin/services/{service}'
  */
 export const destroy = (args: { service: string | { id: string } } | [service: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -497,7 +497,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\ServiceController::destroy
- * @see app/Http/Controllers/Admin/ServiceController.php:133
+ * @see app/Http/Controllers/Admin/ServiceController.php:134
  * @route '/admin/services/{service}'
  */
 destroy.url = (args: { service: string | { id: string } } | [service: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
@@ -530,7 +530,7 @@ destroy.url = (args: { service: string | { id: string } } | [service: string | {
 
 /**
 * @see \App\Http\Controllers\Admin\ServiceController::destroy
- * @see app/Http/Controllers/Admin/ServiceController.php:133
+ * @see app/Http/Controllers/Admin/ServiceController.php:134
  * @route '/admin/services/{service}'
  */
 destroy.delete = (args: { service: string | { id: string } } | [service: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -540,7 +540,7 @@ destroy.delete = (args: { service: string | { id: string } } | [service: string 
 
     /**
 * @see \App\Http\Controllers\Admin\ServiceController::destroy
- * @see app/Http/Controllers/Admin/ServiceController.php:133
+ * @see app/Http/Controllers/Admin/ServiceController.php:134
  * @route '/admin/services/{service}'
  */
     const destroyForm = (args: { service: string | { id: string } } | [service: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -555,7 +555,7 @@ destroy.delete = (args: { service: string | { id: string } } | [service: string 
 
             /**
 * @see \App\Http\Controllers\Admin\ServiceController::destroy
- * @see app/Http/Controllers/Admin/ServiceController.php:133
+ * @see app/Http/Controllers/Admin/ServiceController.php:134
  * @route '/admin/services/{service}'
  */
         destroyForm.delete = (args: { service: string | { id: string } } | [service: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

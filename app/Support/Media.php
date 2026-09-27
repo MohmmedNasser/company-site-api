@@ -44,7 +44,7 @@ class Media
         Storage::disk(self::DISK)->delete($value);
     }
 
-    private static function isExternal(string $value): bool
+    public static function isExternal(string $value): bool
     {
         return str_starts_with($value, '/') || preg_match('#^https?://#i', $value) === 1;
     }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StorePostRequest;
 use App\Http\Requests\Admin\UpdatePostRequest;
 use App\Models\Post;
+use App\Services\ImageUploadService;
 use App\Support\Media;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -39,7 +40,7 @@ class PostController extends Controller
                 ['key' => 'title', 'label' => 'Title', 'type' => 'localized'],
                 ['key' => 'published_at', 'label' => 'Published', 'type' => 'text'],
             ],
-            'records' => collect($page->items())->map(fn (Post $post) => $this->present($post))->values(),
+            'records' => collect($page->items())->map(fn (Post $post) => $this->presentForList($post))->values(),
             'pagination' => [
                 'currentPage' => $page->currentPage(),
                 'lastPage' => $page->lastPage(),
@@ -93,7 +94,7 @@ class PostController extends Controller
         $post->save();
 
         if ($request->hasFile('cover_image')) {
-            Media::delete($previousImage);
+            ImageUploadService::delete($previousImage);
         }
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Post saved.']);
@@ -129,7 +130,7 @@ class PostController extends Controller
     public function destroy(Post $post): RedirectResponse
     {
         $post->delete();
-        Media::delete($post->cover_image);
+        ImageUploadService::delete($post->cover_image);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Post deleted.']);
 
@@ -185,6 +186,26 @@ class PostController extends Controller
         ];
     }
 
+    /**
+     * The index table only shows a cover image, title, and published date,
+     * so this is a subset of present() — kept as its own method (matching
+     * the other five image-bearing controllers) because `cover_image_url`
+     * is the thumbnail here, not the full image present() sends the edit
+     * form.
+     *
+     * @return array<string, mixed>
+     */
+    private function presentForList(Post $post): array
+    {
+        return [
+            'id' => $post->id,
+            'order' => $post->order,
+            'title' => $post->title,
+            'published_at' => $post->published_at?->format('Y-m-d'),
+            'cover_image_url' => ImageUploadService::thumbnailUrl($post->cover_image),
+        ];
+    }
+
     private function generateId(string $slug): string
     {
         $base = Str::of('post-'.Str::slug($slug))->limit(80, '')->rtrim('-')->toString();
@@ -210,7 +231,7 @@ class PostController extends Controller
         $post->body = $data['body'];
 
         if ($request->file('cover_image') instanceof UploadedFile) {
-            $post->cover_image = Media::store($request->file('cover_image'), 'posts');
+            $post->cover_image = ImageUploadService::store($request->file('cover_image'), 'posts');
         }
     }
 
