@@ -19,7 +19,7 @@
 و controllers الدخول والتسجيل الخاصة بـ Fortify) أن يتذكر تمرير
 `'auth' => ['user' => $request->user()]` يدويًا في كل استدعاء لـ
 `Inertia::render()`. الـ middleware `HandleInertiaRequests` مسجّل مرة واحدة في
-`bootstrap/app.php:20-24` كـ middleware عام لمجموعة `web`، فيعمل قبل كل
+`bootstrap/app.php:24-28` كـ middleware عام لمجموعة `web`، فيعمل قبل كل
 controller ويتم الدمج تلقائيًا — لا يوجد controller في هذا المشروع يذكر
 `auth.user` صراحةً، ومع ذلك يستلمه كل مكوّن صفحة.
 
@@ -36,7 +36,7 @@ controller (prop drilling).
 
 ## ماذا ينكسر لو حُذف؟
 
-لو حُذف `HandleInertiaRequests::class` من `bootstrap/app.php:22`، فإن استدعاءات
+لو حُذف `HandleInertiaRequests::class` من `bootstrap/app.php:26`، فإن استدعاءات
 `Inertia::render()` التي تقوم بها controllers الخاصة بـ Fortify (الدخول والتسجيل
 — انظر `02-fortify-role.md`) لن تحقن `errors` أيضًا، لأن الدالة الأساسية
 `Inertia\Middleware::share()` (التي تستدعيها دالتنا `share()` عبر

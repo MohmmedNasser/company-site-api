@@ -30,6 +30,9 @@ class Testimonial extends Model
         ];
     }
 
+    /**
+     * @return BelongsTo<Client, $this>
+     */
     public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class);

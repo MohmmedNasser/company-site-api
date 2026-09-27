@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,12 +14,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // The single admin account (config/admin.php). Registration is
+        // disabled, so this is how it comes to exist.
+        $this->call(AdminUserSeeder::class);
 
         // Categories and clients first: projects carry category_id and
         // client_id foreign keys, testimonials carry client_id.
@@ -38,5 +34,11 @@ class DatabaseSeeder extends Seeder
             TimelineSeeder::class,
             SiteSettingSeeder::class,
         ]);
+
+        // Sample inbox data for local development only — not in tests,
+        // which assert on exact contact/newsletter row counts.
+        if (app()->environment('local')) {
+            $this->call(InboxSeeder::class);
+        }
     }
 }

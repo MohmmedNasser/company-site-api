@@ -62,74 +62,87 @@
 }
 
 :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --destructive-foreground: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.87 0 0);
-    --chart-1: oklch(0.646 0.222 41.116);
-    --chart-2: oklch(0.6 0.118 184.704);
-    --chart-3: oklch(0.398 0.07 227.392);
-    --chart-4: oklch(0.828 0.189 84.429);
-    --chart-5: oklch(0.769 0.188 70.08);
-    --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.87 0 0);
+    /*
+     * Monochrome palette — the same VALUES as the marketing site
+     * (company-site-web: palette.css/tokens.css, documented in
+     * docs/design-decisions.md §1), mapped onto shadcn/ui's variable names.
+     * Not imported from there: that repo builds with Next.js, this one with
+     * Vite, so the values are copied by hand and must be kept in sync by
+     * hand — see docs/design-decisions.md §11 for the mapping table.
+     *
+     * Light theme = the frontend's derived light values.
+     * No hue anywhere: the logo-mark and photography colour exceptions are
+     * marketing-site-only, and --destructive is monochrome too (§11).
+     */
+    --background: #fafafa; /* --bg */
+    --foreground: #0a0a0a; /* --text-primary */
+    --card: #ffffff; /* --card / --surface */
+    --card-foreground: #0a0a0a;
+    --popover: #ffffff; /* --surface-raised (same fill, per §1) */
+    --popover-foreground: #0a0a0a;
+    --primary: #0a0a0a; /* --primary (CTA fill) */
+    --primary-foreground: #ffffff; /* --on-primary */
+    --secondary: rgba(0, 0, 0, 0.04); /* admin-only: hover/selected fill */
+    --secondary-foreground: #0a0a0a;
+    --muted: rgba(0, 0, 0, 0.04);
+    --muted-foreground: #666666; /* --text-secondary */
+    --accent: rgba(0, 0, 0, 0.05);
+    --accent-foreground: #0a0a0a;
+    --destructive: #0a0a0a;
+    --destructive-foreground: #ffffff;
+    --border: rgba(0, 0, 0, 0.1); /* --border */
+    --input: rgba(0, 0, 0, 0.12); /* top of the measured 0.08–0.12 range */
+    --ring: #0a0a0a; /* focus ring built from --primary, as on the site */
+    --chart-1: #0a0a0a;
+    --chart-2: #3a3a3a;
+    --chart-3: #666666;
+    --chart-4: #9a9a9a;
+    --chart-5: #c4c4c4;
+    --radius: 8px; /* → lg 8 / md 6 / sm 4, the site's radius scale */
+    --sidebar: #ffffff;
+    --sidebar-foreground: #0a0a0a;
+    --sidebar-primary: #0a0a0a;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: rgba(0, 0, 0, 0.05);
+    --sidebar-accent-foreground: #0a0a0a;
+    --sidebar-border: rgba(0, 0, 0, 0.1);
+    --sidebar-ring: #0a0a0a;
 }
 
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.145 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.145 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.985 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.396 0.141 25.723);
-    --destructive-foreground: oklch(0.637 0.237 25.331);
-    --border: oklch(0.269 0 0);
-    --input: oklch(0.269 0 0);
-    --ring: oklch(0.439 0 0);
-    --chart-1: oklch(0.488 0.243 264.376);
-    --chart-2: oklch(0.696 0.17 162.48);
-    --chart-3: oklch(0.769 0.188 70.08);
-    --chart-4: oklch(0.627 0.265 303.9);
-    --chart-5: oklch(0.645 0.246 16.439);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.985 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(0.269 0 0);
-    --sidebar-ring: oklch(0.439 0 0);
+    /* Dark theme = the frontend's measured values. */
+    --background: #0a0a0a; /* --bg */
+    --foreground: #ffffff; /* --text-primary */
+    --card: #050505; /* --card / --surface: darker than bg, per §1 */
+    --card-foreground: #ffffff;
+    --popover: #050505;
+    --popover-foreground: #ffffff;
+    --primary: #ffffff; /* solid white CTA */
+    --primary-foreground: #0a0a0a; /* --on-primary */
+    --secondary: rgba(255, 255, 255, 0.06);
+    --secondary-foreground: #ffffff;
+    --muted: rgba(255, 255, 255, 0.06);
+    --muted-foreground: #9a9a9a; /* --text-secondary */
+    --accent: rgba(255, 255, 255, 0.08);
+    --accent-foreground: #ffffff;
+    --destructive: #ffffff;
+    --destructive-foreground: #0a0a0a;
+    --border: rgba(255, 255, 255, 0.1); /* --border */
+    --input: rgba(255, 255, 255, 0.12);
+    --ring: #ffffff;
+    --chart-1: #ffffff;
+    --chart-2: #c4c4c4;
+    --chart-3: #9a9a9a;
+    --chart-4: #666666;
+    --chart-5: #3a3a3a;
+    --sidebar: #050505;
+    --sidebar-foreground: #ffffff;
+    --sidebar-primary: #ffffff;
+    --sidebar-primary-foreground: #0a0a0a;
+    --sidebar-accent: rgba(255, 255, 255, 0.08);
+    --sidebar-accent-foreground: #ffffff;
+    --sidebar-border: rgba(255, 255, 255, 0.1);
+    --sidebar-ring: #ffffff;
 }
 
 @layer base {

@@ -18,9 +18,9 @@ Software agency website. Goals in priority order:
 - No physical CSS properties (pl/pr/left/right) — logical only
 - Every new string goes into both ar.json and en.json
 - No fetch inside components — go through src/lib/content
-- docs/learning/ notes are no longer required — the laravel-teach skill is
-  disabled (.claude/skills/laravel-teach/SKILL.md.disabled). Do not create
-  new learning notes unless explicitly asked.
+- docs/learning/ is closed (01–08 kept as a historical record). Laravel
+  concepts are explained in the chat response, per the laravel-teach skill —
+  never as new docs/learning/ files unless explicitly asked.
 - Every animation respects prefers-reduced-motion
 - Next.js 16: params is a Promise; the file is proxy.ts, not middleware.ts
 - Marketing site uses the extended spacing/motion scale; the admin panel uses
@@ -29,7 +29,7 @@ Software agency website. Goals in priority order:
 ## Current State
 
 Frontend (Track A): Phases 0–8 done — live at https://codexastudio.vercel.app/
-Backend (Track B): Phase 10 — Data Modeling complete; next is Phase 11 — Public JSON API
+Backend (Track B): Phase 11 (public API) and Phase 12 (Inertia admin) built, pending review/commit; next is Phase 13
 Branch: main
 
 ## Commit Convention

@@ -27,11 +27,17 @@ class Client extends Model
         ];
     }
 
+    /**
+     * @return HasMany<Project, $this>
+     */
     public function projects(): HasMany
     {
         return $this->hasMany(Project::class);
     }
 
+    /**
+     * @return HasMany<Testimonial, $this>
+     */
     public function testimonials(): HasMany
     {
         return $this->hasMany(Testimonial::class);

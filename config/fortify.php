@@ -142,8 +142,10 @@ return [
     |
     */
 
+    // No Features::registration(): this is a single-admin panel, and the
+    // one account is created by AdminUserSeeder. Removing the feature
+    // removes the GET/POST /register routes entirely, not just the link.
     'features' => [
-        Features::registration(),
         Features::resetPasswords(),
         Features::emailVerification(),
     ],

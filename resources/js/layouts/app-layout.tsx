@@ -1,3 +1,4 @@
+import { ContentLocaleProvider } from '@/components/admin/content-locale';
 import AppLayoutTemplate from '@/layouts/app/app-sidebar-layout';
 import type { BreadcrumbItem } from '@/types';
 
@@ -10,7 +11,7 @@ export default function AppLayout({
 }) {
     return (
         <AppLayoutTemplate breadcrumbs={breadcrumbs}>
-            {children}
+            <ContentLocaleProvider>{children}</ContentLocaleProvider>
         </AppLayoutTemplate>
     );
 }

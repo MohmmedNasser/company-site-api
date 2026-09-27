@@ -443,7 +443,11 @@ whenever real assets replace the placeholders.
 
 ---
 
-## 7. Open question — the admin panel (not decided now)
+## 7. Open question — the admin panel (RESOLVED 2026-09-26, see §11)
+
+> **Resolved at Phase 12:** the admin inherits the monochrome system, with
+> no colour anywhere — status and destructive semantics included. The text
+> below is kept as the record of what was open.
 
 The future Laravel/Inertia admin panel (Phase 12-13, not yet built) has not
 been decided one way or the other: it may keep the original dense
@@ -472,7 +476,8 @@ by omission.
 installed and merged in with Two-Factor Authentication and Passkeys removed
 entirely, not left disabled-but-present. Kept: registration, login, password
 reset, email verification, password confirmation. See
-`docs/learning/02-auth-scaffold.md` for the full why.
+`docs/learning/02-fortify-role.md` for the full why. **Superseded in part by
+§11:** registration has since been removed too (single admin).
 
 In short: this is a small/single-admin dashboard (Phase 12-13's Inertia
 admin panel), not a multi-tenant SaaS product where WebAuthn/2FA earn their
@@ -503,8 +508,8 @@ changes.
 **The actual gap is `locale` only.** Nothing shares the current app locale
 to the frontend, which the PROJECT-PLAN.md bilingual requirement (`ar`/`en`
 content) will need once the admin panel starts rendering translated
-fields. Left as-is for Phase 13, per the auth-simplification task's scope —
-noted here so it isn't forgotten.
+fields. **Closed at Phase 12** — `locale` and `contentLocales` are now
+shared (§11).
 
 ---
 
@@ -561,3 +566,226 @@ every other Laravel file in this project already uses. Fighting Laravel's
 default (relationship method names, `casts()` keys, migration helpers)
 assumes `snake_case`, and camelCase columns would fight that convention on
 every other file, not just this one.
+
+---
+
+## 10. Phase 11 public JSON API — decisions and Phase 14 follow-ups
+
+The full wire contract is `docs/api-contract.md`; this section records only
+the choices behind it, so they aren't relitigated.
+
+**CORS is an explicit allow-list, currently dev-only.** `config/cors.php`
+was published (the framework default is `allowed_origins: ['*']`) and now
+allows exactly `http://localhost:3000`, methods `GET`/`POST`, no
+credentials. **The production frontend origin must be added to
+`allowed_origins` at Phase 14, not before** — adding it now would allow an
+origin whose integration nothing yet exercises. Note that CORS only governs
+browser-initiated requests: Server Components and Server Actions call the
+API server-to-server and are unaffected by this list either way.
+
+**Phase 14 must fix the rate-limit key.** Both limiters (`api` 120/min,
+`submissions` 5/min/route) key on `$request->ip()`. Once the frontend calls
+the API from Vercel, that IP is Vercel's egress address, shared by every
+visitor — five contact submissions per minute *site-wide*, and a static
+build that fans out many GETs could trip the `api` limiter. At Phase 14,
+before switching `NEXT_PUBLIC_DATA_SOURCE=api`: forward the visitor's IP
+from the Server Action (e.g. `X-Forwarded-For`), configure trusted proxies
+so `$request->ip()` reads it only from the trusted hop, and exempt or raise
+the limit for authenticated build-time traffic.
+
+**Every success is `{ data: T }`, where `T` is the repository method's return
+type.** That one rule makes the Phase 14 `api-repository.ts` a thin unwrap.
+The only addition is `meta` on `GET /posts`.
+
+**`getPostCount()` has no route; it reads `meta.total` from `GET /posts`.**
+A `/posts/count` route would collide with `/posts/{slug}` (a post slugged
+`count` would become unreachable), and the count is a by-product of the
+paginated query anyway.
+
+**Posts pagination uses a hand-built camelCase `meta`, not Laravel's default
+paginated envelope** (`current_page`, `links`, …), which would be the one
+place snake_case leaked onto the wire. Page size is fixed at 6 =
+`POSTS_PER_PAGE`; the client can't change it, because the frontend computes
+page counts from its own constant.
+
+**Projects are not paginated**, overriding PROJECT-PLAN.md's
+`/projects?category=&page=` sketch: `ProjectFilter` has no page field and
+every frontend caller needs the whole set (§6: the portfolio filter is
+client state over the full list).
+
+**Relations are ids, not embedded objects.** `Project.client` and
+`Testimonial.clientId` are `Client.id` strings, per `types.ts`; the
+frontend joins them against `GET /clients` (`clientNameById`). Embedding a
+client object would change the key's type and break that lookup silently.
+
+**One error envelope, rendered in one place**
+(`app/Exceptions/ApiExceptionRenderer.php`, registered in
+`bootstrap/app.php`). It always returns generic status text as `message`,
+never the exception's own message, so a failed slug lookup doesn't reveal
+model class names and a 500 doesn't reveal SQL — even with `APP_DEBUG=true`
+locally. The trade-off: API 500s no longer show Laravel's debug JSON in the
+browser; the stack trace is in `storage/logs/laravel.log`.
+
+**Newsletter subscribe is idempotent** (same 200 for a new or existing
+address, emails lower-cased) rather than a `unique` validation error, so the
+endpoint can't be used to test whether an address is subscribed.
+
+**Static analysis needs `parseModelCastsMethod: true`.** Without it,
+Larastan reads only the declared return type of the models' `casts(): array`
+methods, ignores every cast, and types `published_at` / `status` as the raw
+column string. If a `phpstan.neon` is added to the repo, it needs this
+option.
+
+---
+
+## 11. Phase 12 admin panel (2026-09-26)
+
+### `docs/learning/` is discontinued — explanations move to the chat
+
+**Decision:** no new `docs/learning/NN-topic.md` files. The `laravel-teach`
+skill (`.claude/skills/laravel-teach/SKILL.md`, re-enabled) now requires
+the same four answers — what it is, why it's here, the rejected
+alternative, what breaks without it — **in the chat response** for every
+non-trivial Laravel change, for a reader who knows PHP/JS but not Laravel.
+Notes 01–08 stay as a historical record; the Arabic Phase 11 notes (09–11)
+were deleted.
+
+**Why:** the Phase 11 notes being in Arabic while every other doc is
+English is what surfaced it, but the language was the symptom. The real
+cost was that a committed note per concept — numbered, cross-linked, with
+line references that rot on every edit — is heavy process for a small
+single-admin panel, and the explanation is most useful at the moment the
+code is reviewed, which is the chat, not a file read later. Reversible: if
+a topic deserves a durable write-up, ask for one explicitly.
+
+### The admin inherits the monochrome palette — shadcn token mapping
+
+The admin is Vite, the site is Next.js, so the frontend's
+`palette.css`/`tokens.css` can't be imported. Their **values** are
+re-declared by hand on shadcn's variable names in
+`resources/css/app.css`. **If the frontend palette changes, update this
+table and that file together.**
+
+| shadcn variable                            | Dark                     | Light                | Frontend source (§1)                          |
+| ------------------------------------------ | ------------------------ | -------------------- | --------------------------------------------- |
+| `--background`                             | `#0A0A0A`                | `#FAFAFA`            | `--bg`                                        |
+| `--foreground`, `*-foreground` on surfaces | `#FFFFFF`                | `#0A0A0A`            | `--text-primary`                              |
+| `--card`, `--popover`, `--sidebar`         | `#050505`                | `#FFFFFF`            | `--card` / `--surface` (elevation by border)  |
+| `--border`, `--sidebar-border`             | `rgba(255,255,255,0.10)` | `rgba(0,0,0,0.10)`   | `--border`                                    |
+| `--input`                                  | `rgba(255,255,255,0.12)` | `rgba(0,0,0,0.12)`   | top of the measured 0.08–0.12 border range    |
+| `--primary`, `--sidebar-primary`           | `#FFFFFF`                | `#0A0A0A`            | `--primary` (solid CTA)                       |
+| `--primary-foreground`                     | `#0A0A0A`                | `#FFFFFF`            | `--on-primary`                                |
+| `--muted-foreground`                       | `#9A9A9A`                | `#666666`            | `--text-secondary`                            |
+| `--secondary`, `--muted`                   | `rgba(255,255,255,0.06)` | `rgba(0,0,0,0.04)`   | **admin-only**, derived                       |
+| `--accent`, `--sidebar-accent`             | `rgba(255,255,255,0.08)` | `rgba(0,0,0,0.05)`   | **admin-only**, derived                       |
+| `--ring`, `--sidebar-ring`                 | `#FFFFFF`                | `#0A0A0A`            | focus ring built from `--primary`, as on site |
+| `--destructive` / `--destructive-foreground` | `#FFFFFF` / `#0A0A0A`  | `#0A0A0A` / `#FFFFFF` | none — see below                             |
+| `--chart-1` … `--chart-5`                  | `#FFFFFF` → `#3A3A3A`    | `#0A0A0A` → `#C4C4C4` | grey ramp from the palette                   |
+| `--radius`                                 | `8px`                    | `8px`                | gives lg/md/sm = 8/6/4, the site's radii      |
+
+The two **admin-only** rows exist because shadcn's primitives need a
+hover/selected fill (ghost buttons, the active sidebar item, tab lists)
+and the marketing palette has no fill tiers. A low-alpha tint of the
+foreground is the closest thing to "no new colour": it's the border's own
+recipe at a different strength.
+
+**No hue anywhere, including destructive and errors.** This resolves §7
+(and the bundled status-colour question) for the admin: `--destructive` is
+monochrome, so a destructive button looks like a primary one. What carries
+"danger" instead is the `AlertDialog` every delete goes through — it names
+exactly what is deleted and says it can't be undone — plus the trash icon.
+Invalid inputs get a full-strength border (`aria-invalid` → `--destructive`),
+validation messages are `font-medium` foreground text, and a language tab
+hiding an error gets a dot. Two primitives changed to make that possible:
+`button.tsx`'s destructive variant used a literal `text-white` (white on
+white now) and reads `text-destructive-foreground` instead; `input-error.tsx`
+used `text-red-600`. The auth pages' `text-green-600` status lines became
+foreground text for the same reason.
+
+**Dark by default**, matching the site's `defaultTheme="dark"`; light and
+system stay selectable under Settings → Appearance. Not adopted in this
+phase: the site's Inter Display / Noto Kufi Arabic fonts (the admin still
+loads the starter kit's Instrument Sans) and its logo — both belong to a
+separate branding pass.
+
+### Single admin: no registration, no roles, no policies
+
+- `Features::registration()` is removed from `config/fortify.php`, which
+  removes the `/register` routes entirely (a 404, not a hidden link). The
+  `CreateNewUser` action and `auth/register` page went with it.
+- The one account is created by `AdminUserSeeder` from `ADMIN_*` env vars
+  (`config/admin.php`). It uses `firstOrCreate` on the email, so reseeding
+  never resets a changed password, and it refuses the default password
+  outside `local`/`testing`.
+- **The account can't delete itself** — the starter kit's "Delete account"
+  route and component are removed. With registration off, deleting the
+  sole admin would lock everyone out with no way back but the CLI.
+- **Authorization is the `auth` (+ `verified`) middleware on the admin
+  route group, nothing more.** No Policy classes, no Gates: with one user,
+  "logged in" and "allowed" are the same fact, and a Policy that always
+  returns true is code that looks like a safeguard without being one. If a
+  second role ever appears, that's when policies earn their place.
+- The starter kit's public welcome page is gone; `/` redirects to
+  `/dashboard`, so guests land on `/login`.
+
+### One CRUD pattern for ten content types
+
+Each collection is a small `App\Admin\ContentType` subclass (fields,
+index columns, search field, page size, id prefix) registered in
+`App\Admin\ContentTypes`. One `ContentController`, one `ContentRequest`,
+one `admin/content/index` page and one `admin/content/form` page serve all
+ten; `{type}` in the URL is bound to the definition. `App\Admin\Field`
+produces both the validation rules and the schema the React form renders,
+so the two can't describe different shapes. Every localized field goes
+through the one `<LocalizedField>` component.
+
+- **Reorder is up/down buttons, not drag-and-drop**, for every type. Each
+  move renumbers the collection 1..n, which also repairs duplicate or
+  gapped `order` values. Drag-and-drop would add a dependency and a
+  keyboard story for lists of three to eight items; buttons are
+  keyboard-accessible as-is. Move buttons hide while a search is active
+  (the row above isn't the real neighbour then).
+- **Ids keep the seeded `<prefix>-<slug>` convention** (`svc-…`, `team-…`),
+  suffixed `-2`, `-3` on collision, and never change after creation.
+- **Search** lowercases both sides explicitly: MySQL compares extracted
+  JSON strings with a binary collation, so a plain `LIKE` on `title->en`
+  would be case-sensitive.
+- **A client referenced by projects/testimonials can't be deleted** — the
+  foreign keys have no cascade; the admin gets a readable toast instead of
+  a 500.
+
+### Images: disk paths for uploads, legacy values untouched
+
+Uploads go to the `public` disk (`storage:link` required) and the column
+stores the disk path (`services/01k….webp`). Seeded values are left
+exactly as they are until someone uploads a replacement: absolute
+`picsum.photos` URLs **and** site-relative paths like
+`/clients/ferry-logistics.svg` that the Next.js app serves from its own
+`public/`. `App\Support\Media` tells them apart (scheme or leading slash =
+legacy), resolves only disk paths to URLs — in the admin and in the six
+API resources that emit an image — and only ever deletes disk paths. No
+forced migration.
+
+SVG is accepted only on `client.logo` (`image:allow_svg`): SVG can carry
+script, and logos are the one field where a vector format is the norm.
+
+**Phase 14 note:** uploaded images resolve against `APP_URL`, so the
+frontend's `next.config.ts` `remotePatterns` must include the API host.
+
+### Flash messages and locale
+
+Flash was already wired end to end (§8): `Inertia::flash('toast', …)` →
+the page's top-level `flash` key → `useFlashToast()` → sonner. Phase 12
+only types it (`flashDataType` in `global.d.ts`) and uses it; adding flash
+to shared props as well would have sent it twice. `locale` (UI language,
+the tab `<LocalizedField>` opens on) and `contentLocales` (`['en','ar']`)
+are new shared props. The active language tab is shared by every field on
+the page and persists across admin pages, so an editor can review a whole
+record — or several — in one language.
+
+### Not done in Phase 12, though PROJECT-PLAN.md lists them
+
+Command palette (Cmd+K), a rich-text editor for posts, the queued email on
+new contact messages, and an image thumbnail pipeline. Roles/policies are
+intentionally dropped (above). Ziggy is replaced by Wayfinder, which the
+starter kit ships.

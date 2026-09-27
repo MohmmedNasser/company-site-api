@@ -1,7 +1,21 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-react';
+import {
+    BookOpen,
+    Briefcase,
+    Building2,
+    CircleHelp,
+    FileText,
+    Flag,
+    Footprints,
+    Gem,
+    LayoutGrid,
+    Mail,
+    MessageSquareQuote,
+    Newspaper,
+    Settings,
+    Users,
+} from 'lucide-react';
 import AppLogo from '@/components/app-logo';
-import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import {
@@ -14,27 +28,41 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
+import { index as messages } from '@/routes/admin/messages';
+import { edit as settings } from '@/routes/admin/settings';
+import { index as subscribers } from '@/routes/admin/subscribers';
 import type { NavItem } from '@/types';
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
+const overviewItems: NavItem[] = [
+    { title: 'Dashboard', href: dashboard(), icon: LayoutGrid },
 ];
 
-const footerNavItems: NavItem[] = [
+// One entry per content-type controller under app/Http/Controllers/Admin.
+const contentItems: NavItem[] = [
+    { title: 'Services', href: '/admin/services', icon: Briefcase },
+    { title: 'Projects', href: '/admin/projects', icon: FileText },
     {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: FolderGit2,
+        title: 'Testimonials',
+        href: '/admin/testimonials',
+        icon: MessageSquareQuote,
     },
+    { title: 'Clients', href: '/admin/clients', icon: Building2 },
     {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
+        title: 'Process Steps',
+        href: '/admin/process-steps',
+        icon: Footprints,
     },
+    { title: 'FAQ', href: '/admin/faq', icon: CircleHelp },
+    { title: 'Posts', href: '/admin/posts', icon: Newspaper },
+    { title: 'Team Members', href: '/admin/team-members', icon: Users },
+    { title: 'Values', href: '/admin/values', icon: Gem },
+    { title: 'Timeline', href: '/admin/timeline', icon: Flag },
+];
+
+const siteItems: NavItem[] = [
+    { title: 'Settings', href: settings(), icon: Settings },
+    { title: 'Contact Messages', href: messages(), icon: Mail },
+    { title: 'Newsletter Subscribers', href: subscribers(), icon: BookOpen },
 ];
 
 export function AppSidebar() {
@@ -53,11 +81,12 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain label="Overview" items={overviewItems} />
+                <NavMain label="Content" items={contentItems} />
+                <NavMain label="Site" items={siteItems} />
             </SidebarContent>
 
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
                 <NavUser />
             </SidebarFooter>
         </Sidebar>

@@ -40,7 +40,7 @@ company-site-api/
                          session auth, CSRF, no JSON contract
 ```
 
-Both surfaces share the same Models, Policies, and Services. They differ only in the response layer: `JsonResource` for the API, `Inertia::render()` for the admin. Understanding this split _is_ the Laravel lesson — write it up in `docs/learning/`.
+Both surfaces share the same Models, Policies, and Services. They differ only in the response layer: `JsonResource` for the API, `Inertia::render()` for the admin. Understanding this split _is_ the Laravel lesson.
 
 ### 0.3 Content repository layer — the single most important frontend decision
 
@@ -135,6 +135,10 @@ palette it ends up using), and "record every deviation in
 `docs/design-decisions.md` so it isn't relitigated" as the standing
 process.
 
+> **Resolved at Phase 12 (2026-09-26):** the admin inherits the
+> monochrome system with no colour at all — see `docs/design-decisions.md`
+> §11. The original note follows.
+>
 > **Open question, not decided by the monochrome reset:** whether the
 > admin panel (Phase 12-13, not yet built) keeps a violet accent or
 > inherits the monochrome system is explicitly deferred. Bundled with it:
@@ -420,10 +424,9 @@ Reference for blog structure and depth: `https://apex.ps/en/blog`.
 
 ### 🔵 Track B — Laravel (the learning objective)
 
-> **Binding rule for every phase below:** every file, function, or package added must ship with an explanation in `docs/learning/NN-topic.md` answering: **What is it? · Why is it here? · What was the alternative and why was it rejected? · What breaks if it is removed?**
-> This is enforced automatically by the `laravel-teach` skill.
+> **Binding rule for every phase below:** every non-trivial file, function, or package added is explained **in the chat response** that introduces it, answering: **What is it? · Why is it here? · What was the alternative and why was it rejected? · What breaks if it is removed?** This is enforced by the `laravel-teach` skill.
 >
-> **Update (2026-09-26):** this rule and the `laravel-teach` skill are suspended from Phase 11 onward. Notes 01–08 remain as written; no new notes are created unless explicitly requested.
+> **History (2026-09-26):** this rule originally required a committed `docs/learning/NN-topic.md` per concept. That was discontinued at Phase 12 — see `docs/design-decisions.md` §11. Notes 01–08 remain as a historical record; no new notes are written unless explicitly requested.
 
 ---
 
@@ -439,7 +442,7 @@ Reference for blog structure and depth: `https://apex.ps/en/blog`.
 
 **Topics to write up:** request lifecycle · service container and dependency injection · facades and why they are debated · Artisan · environment configuration
 
-**⚙️ Skill:** `laravel-teach` — authored here, active for every phase after
+**⚙️ Skill:** `laravel-teach` — authored here, active for every phase after (explanations in chat since Phase 12)
 
 ---
 
@@ -566,7 +569,7 @@ Location: `.claude/skills/<name>/SKILL.md`. The goal is that no prompt is ever w
 | #   | Name            | Triggers on               | Contains                                                                                                                                                |
 | --- | --------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1   | `design-system` | any CSS or component work | all tokens, light/dark map, do's and don'ts from the design file, documented deviations, marketing-vs-admin density rule, **no raw hex**                |
-| 2   | `laravel-teach` | any Laravel file created  | the mandatory explanation template (what / why / alternative / what breaks), path convention `docs/learning/`, assumed reader knows PHP but not Laravel |
+| 2   | `laravel-teach` | any Laravel file created  | the four-question explanation (what / why / alternative / what breaks), delivered in the chat response, assumed reader knows PHP but not Laravel |
 | 3   | `i18n-keys`     | any new string            | key naming, edit `ar.json` and `en.json` together, logical-properties rule, Noto Kufi line-height and tracking rules                                    |
 
 ### Priority 2
@@ -622,7 +625,7 @@ Software agency website. Goals in priority order:
 - No physical CSS properties (pl/pr/left/right) — logical only
 - Every new string goes into both ar.json and en.json
 - No fetch inside components — go through src/lib/content
-- Every Laravel file ships with docs/learning/ notes
+- Every non-trivial Laravel change is explained in the chat response
 - Every animation respects prefers-reduced-motion
 - Next.js 16: params is a Promise; the file is proxy.ts, not middleware.ts
 - Marketing site uses the extended spacing/motion scale; the admin panel uses
