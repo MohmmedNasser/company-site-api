@@ -15,28 +15,64 @@ use App\Models\TeamMember;
 use App\Models\Testimonial;
 use App\Models\TimelineEntry;
 use App\Models\ValueItem;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class DashboardController extends Controller
 {
+    /**
+     * slug => [Model class, dashboard label].
+     *
+     * @var array<string, array{0: class-string, 1: string}>
+     */
+    private const CONTENT_TYPES = [
+        'services' => [Service::class, 'Services'],
+        'projects' => [Project::class, 'Projects'],
+        'testimonials' => [Testimonial::class, 'Testimonials'],
+        'clients' => [Client::class, 'Clients'],
+        'process-steps' => [ProcessStep::class, 'Process Steps'],
+        'faq' => [FaqItem::class, 'FAQ'],
+        'posts' => [Post::class, 'Posts'],
+        'team-members' => [TeamMember::class, 'Team Members'],
+        'values' => [ValueItem::class, 'Values'],
+        'timeline' => [TimelineEntry::class, 'Timeline'],
+    ];
+
     public function __invoke(): Response
     {
+        $counts = $this->contentCounts();
+
         return Inertia::render('dashboard', [
-            'content' => [
-                ['slug' => 'services', 'label' => 'Services', 'count' => Service::query()->count()],
-                ['slug' => 'projects', 'label' => 'Projects', 'count' => Project::query()->count()],
-                ['slug' => 'testimonials', 'label' => 'Testimonials', 'count' => Testimonial::query()->count()],
-                ['slug' => 'clients', 'label' => 'Clients', 'count' => Client::query()->count()],
-                ['slug' => 'process-steps', 'label' => 'Process Steps', 'count' => ProcessStep::query()->count()],
-                ['slug' => 'faq', 'label' => 'FAQ', 'count' => FaqItem::query()->count()],
-                ['slug' => 'posts', 'label' => 'Posts', 'count' => Post::query()->count()],
-                ['slug' => 'team-members', 'label' => 'Team Members', 'count' => TeamMember::query()->count()],
-                ['slug' => 'values', 'label' => 'Values', 'count' => ValueItem::query()->count()],
-                ['slug' => 'timeline', 'label' => 'Timeline', 'count' => TimelineEntry::query()->count()],
-            ],
+            'content' => collect(self::CONTENT_TYPES)
+                ->map(fn (array $type, string $slug) => [
+                    'slug' => $slug,
+                    'label' => $type[1],
+                    'count' => $counts[$slug] ?? 0,
+                ])
+                ->values(),
             'unreadMessages' => ContactMessage::query()->whereNull('read_at')->whereNull('archived_at')->count(),
             'subscribers' => NewsletterSubscription::query()->count(),
         ]);
+    }
+
+    /**
+     * The dashboard is the page every admin visit starts on, so its ten
+     * content-type counts are fetched as one UNION ALL query instead of
+     * ten separate COUNT(*) round trips.
+     *
+     * @return array<string, int>
+     */
+    private function contentCounts(): array
+    {
+        $query = null;
+
+        foreach (self::CONTENT_TYPES as $slug => [$model]) {
+            $table = (new $model)->getTable();
+            $count = DB::table($table)->selectRaw('? as slug, count(*) as total', [$slug]);
+            $query = $query === null ? $count : $query->unionAll($count);
+        }
+
+        return $query->pluck('total', 'slug')->all();
     }
 }

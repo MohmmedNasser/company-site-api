@@ -22,16 +22,17 @@ class TestimonialController extends Controller
     public function index(): Response
     {
         $testimonials = Testimonial::query()->orderBy('order')->orderBy('id')->get();
+        $clients = $this->clientNames();
 
         return Inertia::render('admin/content/index', [
             'type' => $this->typeMeta(),
             'columns' => [
                 ['key' => 'avatar', 'label' => 'Avatar', 'type' => 'image'],
                 ['key' => 'author', 'label' => 'Author', 'type' => 'localized'],
-                ['key' => 'client_id', 'label' => 'Client', 'type' => 'text'],
+                ['key' => 'client_label', 'label' => 'Client', 'type' => 'text'],
                 ['key' => 'rating', 'label' => 'Rating', 'type' => 'text'],
             ],
-            'records' => $testimonials->map(fn (Testimonial $testimonial) => $this->present($testimonial))->values(),
+            'records' => $testimonials->map(fn (Testimonial $testimonial) => $this->presentForList($testimonial, $clients))->values(),
             'pagination' => null,
             'filters' => ['search' => ''],
         ]);
@@ -141,18 +142,36 @@ class TestimonialController extends Controller
      */
     private function fieldsSchema(): array
     {
-        $clients = Client::query()->orderBy('order')->get()
-            ->map(fn (Client $client) => ['value' => $client->id, 'label' => $client->localized('name', 'en')])
-            ->all();
-
         return [
             ['name' => 'author', 'type' => 'localized', 'label' => 'Author'],
             ['name' => 'role', 'type' => 'localized', 'label' => 'Role'],
-            ['name' => 'client_id', 'type' => 'select', 'label' => 'Client', 'options' => $clients],
+            ['name' => 'client_id', 'type' => 'select', 'label' => 'Client', 'options' => $this->options($this->clientNames())],
             ['name' => 'rating', 'type' => 'number', 'label' => 'Rating', 'min' => 0, 'max' => 5, 'step' => 0.5],
             ['name' => 'avatar', 'type' => 'image', 'label' => 'Avatar'],
             ['name' => 'quote', 'type' => 'localized', 'label' => 'Quote', 'multiline' => true],
         ];
+    }
+
+    /**
+     * @return array<string, string> id => label
+     */
+    private function clientNames(): array
+    {
+        return Client::query()->orderBy('order')->get()
+            ->mapWithKeys(fn (Client $client) => [$client->id => $client->localized('name', 'en')])
+            ->all();
+    }
+
+    /**
+     * @param  array<string, string>  $labels  id => label
+     * @return list<array{value: string, label: string}>
+     */
+    private function options(array $labels): array
+    {
+        return collect($labels)
+            ->map(fn (string $label, string $value) => ['value' => $value, 'label' => $label])
+            ->values()
+            ->all();
     }
 
     /**
@@ -170,6 +189,27 @@ class TestimonialController extends Controller
             'avatar' => $testimonial->avatar,
             'avatar_url' => Media::url($testimonial->avatar),
             'quote' => $testimonial->quote,
+        ];
+    }
+
+    /**
+     * The index table only shows an avatar, author, client, and rating,
+     * so this leaves out the quote text that present() sends the edit
+     * form — no point shipping every testimonial's full quote to a table
+     * that never renders it.
+     *
+     * @param  array<string, string>  $clients  id => label
+     * @return array<string, mixed>
+     */
+    private function presentForList(Testimonial $testimonial, array $clients): array
+    {
+        return [
+            'id' => $testimonial->id,
+            'order' => $testimonial->order,
+            'author' => $testimonial->author,
+            'client_label' => $clients[$testimonial->client_id] ?? $testimonial->client_id,
+            'rating' => $testimonial->rating,
+            'avatar_url' => Media::url($testimonial->avatar),
         ];
     }
 

@@ -31,15 +31,17 @@ class ProjectController extends Controller
             $this->applySearch($query, 'title', $search);
         }
 
+        $categories = $this->categoryNames();
+
         return Inertia::render('admin/content/index', [
             'type' => $this->typeMeta(),
             'columns' => [
                 ['key' => 'cover_image', 'label' => 'Cover', 'type' => 'image'],
                 ['key' => 'title', 'label' => 'Title', 'type' => 'localized'],
-                ['key' => 'category_id', 'label' => 'Category', 'type' => 'text'],
+                ['key' => 'category_label', 'label' => 'Category', 'type' => 'text'],
                 ['key' => 'status', 'label' => 'Status', 'type' => 'text'],
             ],
-            'records' => $query->get()->map(fn (Project $project) => $this->present($project))->values(),
+            'records' => $query->get()->map(fn (Project $project) => $this->presentForList($project, $categories))->values(),
             'pagination' => null,
             'filters' => ['search' => $search],
         ]);
@@ -145,27 +147,15 @@ class ProjectController extends Controller
     }
 
     /**
-     * Category and client options are read fresh on every request rather
-     * than cached, since an admin editing one list can add to the other
-     * in the same sitting.
-     *
      * @return list<array<string, mixed>>
      */
     private function fieldsSchema(): array
     {
-        $categories = Category::query()->orderBy('order')->get()
-            ->mapWithKeys(fn (Category $category) => [$category->id => $category->localized('name', 'en')])
-            ->all();
-
-        $clients = Client::query()->orderBy('order')->get()
-            ->mapWithKeys(fn (Client $client) => [$client->id => $client->localized('name', 'en')])
-            ->all();
-
         return [
             ['name' => 'title', 'type' => 'localized', 'label' => 'Title'],
             ['name' => 'slug', 'type' => 'slug', 'label' => 'Slug'],
-            ['name' => 'category_id', 'type' => 'select', 'label' => 'Category', 'options' => $this->options($categories)],
-            ['name' => 'client_id', 'type' => 'select', 'label' => 'Client', 'options' => $this->options($clients)],
+            ['name' => 'category_id', 'type' => 'select', 'label' => 'Category', 'options' => $this->options($this->categoryNames())],
+            ['name' => 'client_id', 'type' => 'select', 'label' => 'Client', 'options' => $this->options($this->clientNames())],
             ['name' => 'status', 'type' => 'select', 'label' => 'Status', 'options' => [
                 ['value' => ProjectStatus::Shipped->value, 'label' => 'Shipped'],
                 ['value' => ProjectStatus::InDevelopment->value, 'label' => 'In development'],
@@ -174,6 +164,29 @@ class ProjectController extends Controller
             ['name' => 'summary', 'type' => 'localized', 'label' => 'Summary', 'multiline' => true],
             ['name' => 'description', 'type' => 'localized', 'label' => 'Description', 'multiline' => true],
         ];
+    }
+
+    /**
+     * Read fresh on every request rather than cached, since an admin
+     * editing one list can add to the other in the same sitting.
+     *
+     * @return array<string, string> id => label
+     */
+    private function categoryNames(): array
+    {
+        return Category::query()->orderBy('order')->get()
+            ->mapWithKeys(fn (Category $category) => [$category->id => $category->localized('name', 'en')])
+            ->all();
+    }
+
+    /**
+     * @return array<string, string> id => label
+     */
+    private function clientNames(): array
+    {
+        return Client::query()->orderBy('order')->get()
+            ->mapWithKeys(fn (Client $client) => [$client->id => $client->localized('name', 'en')])
+            ->all();
     }
 
     /**
@@ -205,6 +218,27 @@ class ProjectController extends Controller
             'cover_image_url' => Media::url($project->cover_image),
             'summary' => $project->summary,
             'description' => $project->description,
+        ];
+    }
+
+    /**
+     * The index table only shows a cover image, title, category, and
+     * status, so this leaves out the summary/description text that
+     * present() sends the edit form — no point shipping every project's
+     * full copy to a table that never renders it.
+     *
+     * @param  array<string, string>  $categories  id => label
+     * @return array<string, mixed>
+     */
+    private function presentForList(Project $project, array $categories): array
+    {
+        return [
+            'id' => $project->id,
+            'order' => $project->order,
+            'title' => $project->title,
+            'category_label' => $categories[$project->category_id] ?? $project->category_id,
+            'status' => $project->status->value,
+            'cover_image_url' => Media::url($project->cover_image),
         ];
     }
 

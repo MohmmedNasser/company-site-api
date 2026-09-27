@@ -18,7 +18,7 @@ class AdminUserSeeder extends Seeder
     {
         $config = config('admin');
 
-        if ($config['password'] === 'password' && ! app()->environment('local', 'testing')) {
+        if ((blank($config['password']) || $config['password'] === 'password') && ! app()->environment('local', 'testing')) {
             throw new RuntimeException('Set ADMIN_PASSWORD in .env before seeding the admin outside local development.');
         }
 

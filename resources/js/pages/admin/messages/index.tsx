@@ -94,7 +94,7 @@ export default function MessagesIndex({
                     />
                     {/* A file download, not an Inertia visit — plain <a>. */}
                     <Button variant="outline" size="sm" asChild>
-                        <a href={exportMethod.url()} download>
+                        <a href={exportMethod.url({ query: { filter } })} download>
                             <Download />
                             Export CSV
                         </a>

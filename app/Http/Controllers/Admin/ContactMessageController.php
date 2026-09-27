@@ -83,18 +83,25 @@ class ContactMessageController extends Controller
         return back();
     }
 
-    public function export(): StreamedResponse
+    public function export(Request $request): StreamedResponse
     {
-        $rows = ContactMessage::query()->latest()->lazy()->map(fn (ContactMessage $message) => [
-            $message->created_at->toDateTimeString(),
-            $message->name,
-            $message->email,
-            $message->service,
-            $message->budget,
-            $message->message,
-            $message->read_at !== null ? 'yes' : 'no',
-            $message->archived_at !== null ? 'yes' : 'no',
-        ]);
+        $filter = in_array($request->query('filter'), self::FILTERS, true) ? $request->query('filter') : 'inbox';
+
+        $rows = ContactMessage::query()
+            ->when($filter === 'inbox', fn ($query) => $query->whereNull('archived_at'))
+            ->when($filter === 'archived', fn ($query) => $query->whereNotNull('archived_at'))
+            ->latest()
+            ->lazy()
+            ->map(fn (ContactMessage $message) => [
+                $message->created_at->toDateTimeString(),
+                $message->name,
+                $message->email,
+                $message->service,
+                $message->budget,
+                $message->message,
+                $message->read_at !== null ? 'yes' : 'no',
+                $message->archived_at !== null ? 'yes' : 'no',
+            ]);
 
         return Csv::download(
             'contact-messages-'.Date::now()->format('Y-m-d').'.csv',

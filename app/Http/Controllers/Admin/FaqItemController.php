@@ -25,7 +25,7 @@ class FaqItemController extends Controller
             'columns' => [
                 ['key' => 'question', 'label' => 'Question', 'type' => 'localized'],
             ],
-            'records' => $items->map(fn (FaqItem $item) => $this->present($item))->values(),
+            'records' => $items->map(fn (FaqItem $item) => $this->presentForList($item))->values(),
             'pagination' => null,
             'filters' => ['search' => ''],
         ]);
@@ -143,6 +143,22 @@ class FaqItemController extends Controller
             'order' => $item->order,
             'question' => $item->question,
             'answer' => $item->answer,
+        ];
+    }
+
+    /**
+     * The index table only shows the question, so this leaves out the
+     * answer text that present() sends the edit form — no point shipping
+     * every FAQ's full answer to a table that never renders it.
+     *
+     * @return array<string, mixed>
+     */
+    private function presentForList(FaqItem $item): array
+    {
+        return [
+            'id' => $item->id,
+            'order' => $item->order,
+            'question' => $item->question,
         ];
     }
 

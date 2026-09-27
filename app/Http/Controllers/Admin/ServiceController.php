@@ -41,7 +41,7 @@ class ServiceController extends Controller
                 ['key' => 'title', 'label' => 'Title', 'type' => 'localized'],
                 ['key' => 'slug', 'label' => 'Slug', 'type' => 'text'],
             ],
-            'records' => $query->get()->map(fn (Service $service) => $this->present($service))->values(),
+            'records' => $query->get()->map(fn (Service $service) => $this->presentForList($service))->values(),
             'pagination' => null,
             'filters' => ['search' => $search],
         ]);
@@ -194,6 +194,25 @@ class ServiceController extends Controller
             'categories' => $service->categories,
             'excerpt' => $service->excerpt,
             'body' => $service->body,
+        ];
+    }
+
+    /**
+     * The index table only shows an image, title, and slug, so this
+     * leaves out the excerpt/body text that present() sends the edit
+     * form — no point shipping every service's full copy to a table
+     * that never renders it.
+     *
+     * @return array<string, mixed>
+     */
+    private function presentForList(Service $service): array
+    {
+        return [
+            'id' => $service->id,
+            'order' => $service->order,
+            'title' => $service->title,
+            'slug' => $service->slug,
+            'image_url' => Media::url($service->image),
         ];
     }
 
