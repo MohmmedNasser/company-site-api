@@ -160,7 +160,7 @@ exportMethod.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
  * @see app/Http/Controllers/Admin/ContactMessageController.php:58
  * @route '/admin/messages/{message}/read'
  */
-export const toggleRead = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const toggleRead = (args: { message: string | number | { id: string | number } } | [message: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggleRead.url(args, options),
     method: 'patch',
 })
@@ -175,7 +175,7 @@ toggleRead.definition = {
  * @see app/Http/Controllers/Admin/ContactMessageController.php:58
  * @route '/admin/messages/{message}/read'
  */
-toggleRead.url = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+toggleRead.url = (args: { message: string | number | { id: string | number } } | [message: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { message: args }
     }
@@ -208,7 +208,7 @@ toggleRead.url = (args: { message: number | { id: number } } | [message: number 
  * @see app/Http/Controllers/Admin/ContactMessageController.php:58
  * @route '/admin/messages/{message}/read'
  */
-toggleRead.patch = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+toggleRead.patch = (args: { message: string | number | { id: string | number } } | [message: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggleRead.url(args, options),
     method: 'patch',
 })
@@ -218,7 +218,7 @@ toggleRead.patch = (args: { message: number | { id: number } } | [message: numbe
  * @see app/Http/Controllers/Admin/ContactMessageController.php:58
  * @route '/admin/messages/{message}/read'
  */
-    const toggleReadForm = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    const toggleReadForm = (args: { message: string | number | { id: string | number } } | [message: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: toggleRead.url(args, {
                     [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                         _method: 'PATCH',
@@ -233,7 +233,7 @@ toggleRead.patch = (args: { message: number | { id: number } } | [message: numbe
  * @see app/Http/Controllers/Admin/ContactMessageController.php:58
  * @route '/admin/messages/{message}/read'
  */
-        toggleReadForm.patch = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        toggleReadForm.patch = (args: { message: string | number | { id: string | number } } | [message: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: toggleRead.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'PATCH',
@@ -249,7 +249,7 @@ toggleRead.patch = (args: { message: number | { id: number } } | [message: numbe
  * @see app/Http/Controllers/Admin/ContactMessageController.php:66
  * @route '/admin/messages/{message}/archive'
  */
-export const toggleArchive = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const toggleArchive = (args: { message: string | number | { id: string | number } } | [message: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggleArchive.url(args, options),
     method: 'patch',
 })
@@ -264,7 +264,7 @@ toggleArchive.definition = {
  * @see app/Http/Controllers/Admin/ContactMessageController.php:66
  * @route '/admin/messages/{message}/archive'
  */
-toggleArchive.url = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+toggleArchive.url = (args: { message: string | number | { id: string | number } } | [message: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { message: args }
     }
@@ -297,7 +297,7 @@ toggleArchive.url = (args: { message: number | { id: number } } | [message: numb
  * @see app/Http/Controllers/Admin/ContactMessageController.php:66
  * @route '/admin/messages/{message}/archive'
  */
-toggleArchive.patch = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+toggleArchive.patch = (args: { message: string | number | { id: string | number } } | [message: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggleArchive.url(args, options),
     method: 'patch',
 })
@@ -307,7 +307,7 @@ toggleArchive.patch = (args: { message: number | { id: number } } | [message: nu
  * @see app/Http/Controllers/Admin/ContactMessageController.php:66
  * @route '/admin/messages/{message}/archive'
  */
-    const toggleArchiveForm = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    const toggleArchiveForm = (args: { message: string | number | { id: string | number } } | [message: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: toggleArchive.url(args, {
                     [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                         _method: 'PATCH',
@@ -322,7 +322,7 @@ toggleArchive.patch = (args: { message: number | { id: number } } | [message: nu
  * @see app/Http/Controllers/Admin/ContactMessageController.php:66
  * @route '/admin/messages/{message}/archive'
  */
-        toggleArchiveForm.patch = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        toggleArchiveForm.patch = (args: { message: string | number | { id: string | number } } | [message: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: toggleArchive.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'PATCH',
@@ -338,7 +338,7 @@ toggleArchive.patch = (args: { message: number | { id: number } } | [message: nu
  * @see app/Http/Controllers/Admin/ContactMessageController.php:77
  * @route '/admin/messages/{message}'
  */
-export const destroy = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { message: string | number | { id: string | number } } | [message: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -353,7 +353,7 @@ destroy.definition = {
  * @see app/Http/Controllers/Admin/ContactMessageController.php:77
  * @route '/admin/messages/{message}'
  */
-destroy.url = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { message: string | number | { id: string | number } } | [message: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { message: args }
     }
@@ -386,7 +386,7 @@ destroy.url = (args: { message: number | { id: number } } | [message: number | {
  * @see app/Http/Controllers/Admin/ContactMessageController.php:77
  * @route '/admin/messages/{message}'
  */
-destroy.delete = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { message: string | number | { id: string | number } } | [message: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -396,7 +396,7 @@ destroy.delete = (args: { message: number | { id: number } } | [message: number 
  * @see app/Http/Controllers/Admin/ContactMessageController.php:77
  * @route '/admin/messages/{message}'
  */
-    const destroyForm = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    const destroyForm = (args: { message: string | number | { id: string | number } } | [message: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: destroy.url(args, {
                     [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                         _method: 'DELETE',
@@ -411,7 +411,7 @@ destroy.delete = (args: { message: number | { id: number } } | [message: number 
  * @see app/Http/Controllers/Admin/ContactMessageController.php:77
  * @route '/admin/messages/{message}'
  */
-        destroyForm.delete = (args: { message: number | { id: number } } | [message: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        destroyForm.delete = (args: { message: string | number | { id: string | number } } | [message: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: destroy.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'DELETE',

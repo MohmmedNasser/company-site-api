@@ -215,7 +215,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
  * @see app/Http/Controllers/Admin/TimelineEntryController.php:61
  * @route '/admin/timeline/{timeline_entry}/edit'
  */
-export const edit = (args: { timeline_entry: string | { id: string } } | [timeline_entry: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { timeline_entry: string | number | { id: string | number } } | [timeline_entry: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -230,7 +230,7 @@ edit.definition = {
  * @see app/Http/Controllers/Admin/TimelineEntryController.php:61
  * @route '/admin/timeline/{timeline_entry}/edit'
  */
-edit.url = (args: { timeline_entry: string | { id: string } } | [timeline_entry: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+edit.url = (args: { timeline_entry: string | number | { id: string | number } } | [timeline_entry: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { timeline_entry: args }
     }
@@ -263,7 +263,7 @@ edit.url = (args: { timeline_entry: string | { id: string } } | [timeline_entry:
  * @see app/Http/Controllers/Admin/TimelineEntryController.php:61
  * @route '/admin/timeline/{timeline_entry}/edit'
  */
-edit.get = (args: { timeline_entry: string | { id: string } } | [timeline_entry: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { timeline_entry: string | number | { id: string | number } } | [timeline_entry: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -272,7 +272,7 @@ edit.get = (args: { timeline_entry: string | { id: string } } | [timeline_entry:
  * @see app/Http/Controllers/Admin/TimelineEntryController.php:61
  * @route '/admin/timeline/{timeline_entry}/edit'
  */
-edit.head = (args: { timeline_entry: string | { id: string } } | [timeline_entry: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { timeline_entry: string | number | { id: string | number } } | [timeline_entry: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -282,7 +282,7 @@ edit.head = (args: { timeline_entry: string | { id: string } } | [timeline_entry
  * @see app/Http/Controllers/Admin/TimelineEntryController.php:61
  * @route '/admin/timeline/{timeline_entry}/edit'
  */
-    const editForm = (args: { timeline_entry: string | { id: string } } | [timeline_entry: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    const editForm = (args: { timeline_entry: string | number | { id: string | number } } | [timeline_entry: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
         action: edit.url(args, options),
         method: 'get',
     })
@@ -292,7 +292,7 @@ edit.head = (args: { timeline_entry: string | { id: string } } | [timeline_entry
  * @see app/Http/Controllers/Admin/TimelineEntryController.php:61
  * @route '/admin/timeline/{timeline_entry}/edit'
  */
-        editForm.get = (args: { timeline_entry: string | { id: string } } | [timeline_entry: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        editForm.get = (args: { timeline_entry: string | number | { id: string | number } } | [timeline_entry: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: edit.url(args, options),
             method: 'get',
         })
@@ -301,7 +301,7 @@ edit.head = (args: { timeline_entry: string | { id: string } } | [timeline_entry
  * @see app/Http/Controllers/Admin/TimelineEntryController.php:61
  * @route '/admin/timeline/{timeline_entry}/edit'
  */
-        editForm.head = (args: { timeline_entry: string | { id: string } } | [timeline_entry: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        editForm.head = (args: { timeline_entry: string | number | { id: string | number } } | [timeline_entry: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: edit.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'HEAD',
@@ -317,7 +317,7 @@ edit.head = (args: { timeline_entry: string | { id: string } } | [timeline_entry
  * @see app/Http/Controllers/Admin/TimelineEntryController.php:70
  * @route '/admin/timeline/{timeline_entry}'
  */
-export const update = (args: { timeline_entry: string | { id: string } } | [timeline_entry: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { timeline_entry: string | number | { id: string | number } } | [timeline_entry: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -332,7 +332,7 @@ update.definition = {
  * @see app/Http/Controllers/Admin/TimelineEntryController.php:70
  * @route '/admin/timeline/{timeline_entry}'
  */
-update.url = (args: { timeline_entry: string | { id: string } } | [timeline_entry: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+update.url = (args: { timeline_entry: string | number | { id: string | number } } | [timeline_entry: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { timeline_entry: args }
     }
@@ -365,7 +365,7 @@ update.url = (args: { timeline_entry: string | { id: string } } | [timeline_entr
  * @see app/Http/Controllers/Admin/TimelineEntryController.php:70
  * @route '/admin/timeline/{timeline_entry}'
  */
-update.put = (args: { timeline_entry: string | { id: string } } | [timeline_entry: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { timeline_entry: string | number | { id: string | number } } | [timeline_entry: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -375,7 +375,7 @@ update.put = (args: { timeline_entry: string | { id: string } } | [timeline_entr
  * @see app/Http/Controllers/Admin/TimelineEntryController.php:70
  * @route '/admin/timeline/{timeline_entry}'
  */
-    const updateForm = (args: { timeline_entry: string | { id: string } } | [timeline_entry: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    const updateForm = (args: { timeline_entry: string | number | { id: string | number } } | [timeline_entry: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: update.url(args, {
                     [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                         _method: 'PUT',
@@ -390,7 +390,7 @@ update.put = (args: { timeline_entry: string | { id: string } } | [timeline_entr
  * @see app/Http/Controllers/Admin/TimelineEntryController.php:70
  * @route '/admin/timeline/{timeline_entry}'
  */
-        updateForm.put = (args: { timeline_entry: string | { id: string } } | [timeline_entry: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        updateForm.put = (args: { timeline_entry: string | number | { id: string | number } } | [timeline_entry: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: update.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'PUT',
@@ -406,7 +406,7 @@ update.put = (args: { timeline_entry: string | { id: string } } | [timeline_entr
  * @see app/Http/Controllers/Admin/TimelineEntryController.php:80
  * @route '/admin/timeline/{timeline_entry}/move'
  */
-export const move = (args: { timeline_entry: string | { id: string } } | [timeline_entry: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const move = (args: { timeline_entry: string | number | { id: string | number } } | [timeline_entry: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: move.url(args, options),
     method: 'post',
 })
@@ -421,7 +421,7 @@ move.definition = {
  * @see app/Http/Controllers/Admin/TimelineEntryController.php:80
  * @route '/admin/timeline/{timeline_entry}/move'
  */
-move.url = (args: { timeline_entry: string | { id: string } } | [timeline_entry: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+move.url = (args: { timeline_entry: string | number | { id: string | number } } | [timeline_entry: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { timeline_entry: args }
     }
@@ -454,7 +454,7 @@ move.url = (args: { timeline_entry: string | { id: string } } | [timeline_entry:
  * @see app/Http/Controllers/Admin/TimelineEntryController.php:80
  * @route '/admin/timeline/{timeline_entry}/move'
  */
-move.post = (args: { timeline_entry: string | { id: string } } | [timeline_entry: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+move.post = (args: { timeline_entry: string | number | { id: string | number } } | [timeline_entry: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: move.url(args, options),
     method: 'post',
 })
@@ -464,7 +464,7 @@ move.post = (args: { timeline_entry: string | { id: string } } | [timeline_entry
  * @see app/Http/Controllers/Admin/TimelineEntryController.php:80
  * @route '/admin/timeline/{timeline_entry}/move'
  */
-    const moveForm = (args: { timeline_entry: string | { id: string } } | [timeline_entry: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    const moveForm = (args: { timeline_entry: string | number | { id: string | number } } | [timeline_entry: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: move.url(args, options),
         method: 'post',
     })
@@ -474,7 +474,7 @@ move.post = (args: { timeline_entry: string | { id: string } } | [timeline_entry
  * @see app/Http/Controllers/Admin/TimelineEntryController.php:80
  * @route '/admin/timeline/{timeline_entry}/move'
  */
-        moveForm.post = (args: { timeline_entry: string | { id: string } } | [timeline_entry: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        moveForm.post = (args: { timeline_entry: string | number | { id: string | number } } | [timeline_entry: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: move.url(args, options),
             method: 'post',
         })
@@ -485,7 +485,7 @@ move.post = (args: { timeline_entry: string | { id: string } } | [timeline_entry
  * @see app/Http/Controllers/Admin/TimelineEntryController.php:105
  * @route '/admin/timeline/{timeline_entry}'
  */
-export const destroy = (args: { timeline_entry: string | { id: string } } | [timeline_entry: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { timeline_entry: string | number | { id: string | number } } | [timeline_entry: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -500,7 +500,7 @@ destroy.definition = {
  * @see app/Http/Controllers/Admin/TimelineEntryController.php:105
  * @route '/admin/timeline/{timeline_entry}'
  */
-destroy.url = (args: { timeline_entry: string | { id: string } } | [timeline_entry: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+destroy.url = (args: { timeline_entry: string | number | { id: string | number } } | [timeline_entry: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { timeline_entry: args }
     }
@@ -533,7 +533,7 @@ destroy.url = (args: { timeline_entry: string | { id: string } } | [timeline_ent
  * @see app/Http/Controllers/Admin/TimelineEntryController.php:105
  * @route '/admin/timeline/{timeline_entry}'
  */
-destroy.delete = (args: { timeline_entry: string | { id: string } } | [timeline_entry: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { timeline_entry: string | number | { id: string | number } } | [timeline_entry: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -543,7 +543,7 @@ destroy.delete = (args: { timeline_entry: string | { id: string } } | [timeline_
  * @see app/Http/Controllers/Admin/TimelineEntryController.php:105
  * @route '/admin/timeline/{timeline_entry}'
  */
-    const destroyForm = (args: { timeline_entry: string | { id: string } } | [timeline_entry: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    const destroyForm = (args: { timeline_entry: string | number | { id: string | number } } | [timeline_entry: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: destroy.url(args, {
                     [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                         _method: 'DELETE',
@@ -558,7 +558,7 @@ destroy.delete = (args: { timeline_entry: string | { id: string } } | [timeline_
  * @see app/Http/Controllers/Admin/TimelineEntryController.php:105
  * @route '/admin/timeline/{timeline_entry}'
  */
-        destroyForm.delete = (args: { timeline_entry: string | { id: string } } | [timeline_entry: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        destroyForm.delete = (args: { timeline_entry: string | number | { id: string | number } } | [timeline_entry: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: destroy.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'DELETE',
