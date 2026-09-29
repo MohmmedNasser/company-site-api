@@ -223,6 +223,34 @@ class PublicApiTest extends TestCase
             ->assertJsonPath('error.code', 'too_many_requests');
     }
 
+    public function test_a_build_sized_burst_of_reads_is_not_throttled(): void
+    {
+        // Phase 14 measured ~350 GETs from one IP for a single `pnpm build`.
+        foreach (range(1, 350) as $i) {
+            $this->getJson('/api/v1/settings')->assertOk();
+        }
+    }
+
+    public function test_reads_are_throttled_after_six_hundred_per_minute(): void
+    {
+        foreach (range(1, 600) as $i) {
+            $this->getJson('/api/v1/clients')->assertOk();
+        }
+
+        $this->getJson('/api/v1/clients')
+            ->assertTooManyRequests()
+            ->assertJsonPath('error.code', 'too_many_requests');
+    }
+
+    public function test_read_traffic_does_not_use_up_the_submission_budget(): void
+    {
+        foreach (range(1, 50) as $i) {
+            $this->getJson('/api/v1/clients')->assertOk();
+        }
+
+        $this->postJson('/api/v1/newsletter', ['email' => 'a@example.com'])->assertOk();
+    }
+
     public function test_unexpected_errors_use_the_envelope_without_leaking_the_exception_message(): void
     {
         Route::get('/api/v1/_boom', fn () => throw new RuntimeException('SQLSTATE secret detail'));

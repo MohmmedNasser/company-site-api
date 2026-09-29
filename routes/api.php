@@ -44,8 +44,9 @@ Route::prefix('v1')->group(function () {
 
     Route::get('settings', [SiteSettingController::class, 'show']);
 
-    // Stricter limit on top of the group-wide "api" limiter: these are
-    // the only endpoints that write to the database.
+    // Stricter limit on top of the group-wide "api" limiter (600/min for
+    // reads, see AppServiceProvider): these are the only endpoints that
+    // write to the database. Still IP-keyed — see design-decisions.md §10.
     Route::middleware('throttle:submissions')->group(function () {
         Route::post('contact', [ContactController::class, 'store']);
         Route::post('newsletter', [NewsletterController::class, 'store']);

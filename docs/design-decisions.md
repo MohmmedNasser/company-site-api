@@ -583,15 +583,31 @@ origin whose integration nothing yet exercises. Note that CORS only governs
 browser-initiated requests: Server Components and Server Actions call the
 API server-to-server and are unaffected by this list either way.
 
-**Phase 14 must fix the rate-limit key.** Both limiters (`api` 120/min,
-`submissions` 5/min/route) key on `$request->ip()`. Once the frontend calls
-the API from Vercel, that IP is Vercel's egress address, shared by every
-visitor — five contact submissions per minute *site-wide*, and a static
-build that fans out many GETs could trip the `api` limiter. At Phase 14,
-before switching `NEXT_PUBLIC_DATA_SOURCE=api`: forward the visitor's IP
-from the Server Action (e.g. `X-Forwarded-For`), configure trusted proxies
-so `$request->ip()` reads it only from the trusted hop, and exempt or raise
-the limit for authenticated build-time traffic.
+**Rate limits (revised 2026-09-29): reads 600/min, submissions 5/min.**
+The `api` limiter is now method-aware: `GET`/`HEAD` get **600/min per IP**
+(bucket `read|ip`); every other method keeps 120/min (bucket `write|ip`);
+`POST /contact` and `POST /newsletter` still stack `submissions` (5/min per
+route) on top, unchanged. Why 600: Phase 14 measured ~350 GETs from one IP
+for a single `pnpm build` (~10 calls per page render, no request caching
+yet), and that burst has to coexist with live page loads (~10 calls each) and
+revalidation traffic in the same minute. 600 gives that build ~70% headroom
+(~10 req/s sustained) while still stopping a runaway loop. The endpoints are
+public, read-only and cheap, so a high ceiling costs little; the abuse-prone
+surface is the two writes, which is why those stay at 5/min. Once the
+frontend caches reads (`"use cache"`), real traffic falls well below this.
+`PublicApiTest` covers a 350-request burst (no 429), the 601st read (429),
+and that reads don't consume the submission budget. This is fix 2 of the
+frontend's three required-together fixes (its `design-decisions.md` §9).
+
+**The key is still the client IP, and that still needs revisiting.** Once the
+frontend calls the API from Vercel's edge (or the Next.js server is the only
+caller), every visitor shares that egress IP: the 600/min read budget becomes
+site-wide, and the 5/min contact/newsletter budget becomes five submissions
+per minute for *all* visitors combined. Deliberately not solved here. When
+real production traffic arrives: forward the visitor's IP from the Server
+Action (e.g. `X-Forwarded-For`), configure trusted proxies so
+`$request->ip()` reads it only from the trusted hop, and exempt or raise the
+limit for authenticated build-time traffic.
 
 **Every success is `{ data: T }`, where `T` is the repository method's return
 type.** That one rule makes the Phase 14 `api-repository.ts` a thin unwrap.
