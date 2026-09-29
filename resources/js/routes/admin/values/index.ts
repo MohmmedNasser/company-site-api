@@ -215,7 +215,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
  * @see app/Http/Controllers/Admin/ValueItemController.php:59
  * @route '/admin/values/{value_item}/edit'
  */
-export const edit = (args: { value_item: string | number | { id: string | number } } | [value_item: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { value_item: string | { id: string } } | [value_item: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -230,7 +230,7 @@ edit.definition = {
  * @see app/Http/Controllers/Admin/ValueItemController.php:59
  * @route '/admin/values/{value_item}/edit'
  */
-edit.url = (args: { value_item: string | number | { id: string | number } } | [value_item: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+edit.url = (args: { value_item: string | { id: string } } | [value_item: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { value_item: args }
     }
@@ -263,7 +263,7 @@ edit.url = (args: { value_item: string | number | { id: string | number } } | [v
  * @see app/Http/Controllers/Admin/ValueItemController.php:59
  * @route '/admin/values/{value_item}/edit'
  */
-edit.get = (args: { value_item: string | number | { id: string | number } } | [value_item: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { value_item: string | { id: string } } | [value_item: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -272,7 +272,7 @@ edit.get = (args: { value_item: string | number | { id: string | number } } | [v
  * @see app/Http/Controllers/Admin/ValueItemController.php:59
  * @route '/admin/values/{value_item}/edit'
  */
-edit.head = (args: { value_item: string | number | { id: string | number } } | [value_item: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { value_item: string | { id: string } } | [value_item: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -282,7 +282,7 @@ edit.head = (args: { value_item: string | number | { id: string | number } } | [
  * @see app/Http/Controllers/Admin/ValueItemController.php:59
  * @route '/admin/values/{value_item}/edit'
  */
-    const editForm = (args: { value_item: string | number | { id: string | number } } | [value_item: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    const editForm = (args: { value_item: string | { id: string } } | [value_item: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
         action: edit.url(args, options),
         method: 'get',
     })
@@ -292,7 +292,7 @@ edit.head = (args: { value_item: string | number | { id: string | number } } | [
  * @see app/Http/Controllers/Admin/ValueItemController.php:59
  * @route '/admin/values/{value_item}/edit'
  */
-        editForm.get = (args: { value_item: string | number | { id: string | number } } | [value_item: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        editForm.get = (args: { value_item: string | { id: string } } | [value_item: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: edit.url(args, options),
             method: 'get',
         })
@@ -301,7 +301,7 @@ edit.head = (args: { value_item: string | number | { id: string | number } } | [
  * @see app/Http/Controllers/Admin/ValueItemController.php:59
  * @route '/admin/values/{value_item}/edit'
  */
-        editForm.head = (args: { value_item: string | number | { id: string | number } } | [value_item: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        editForm.head = (args: { value_item: string | { id: string } } | [value_item: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: edit.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'HEAD',
@@ -317,7 +317,7 @@ edit.head = (args: { value_item: string | number | { id: string | number } } | [
  * @see app/Http/Controllers/Admin/ValueItemController.php:68
  * @route '/admin/values/{value_item}'
  */
-export const update = (args: { value_item: string | number | { id: string | number } } | [value_item: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { value_item: string | { id: string } } | [value_item: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -332,7 +332,7 @@ update.definition = {
  * @see app/Http/Controllers/Admin/ValueItemController.php:68
  * @route '/admin/values/{value_item}'
  */
-update.url = (args: { value_item: string | number | { id: string | number } } | [value_item: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+update.url = (args: { value_item: string | { id: string } } | [value_item: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { value_item: args }
     }
@@ -365,7 +365,7 @@ update.url = (args: { value_item: string | number | { id: string | number } } | 
  * @see app/Http/Controllers/Admin/ValueItemController.php:68
  * @route '/admin/values/{value_item}'
  */
-update.put = (args: { value_item: string | number | { id: string | number } } | [value_item: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { value_item: string | { id: string } } | [value_item: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -375,7 +375,7 @@ update.put = (args: { value_item: string | number | { id: string | number } } | 
  * @see app/Http/Controllers/Admin/ValueItemController.php:68
  * @route '/admin/values/{value_item}'
  */
-    const updateForm = (args: { value_item: string | number | { id: string | number } } | [value_item: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    const updateForm = (args: { value_item: string | { id: string } } | [value_item: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: update.url(args, {
                     [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                         _method: 'PUT',
@@ -390,7 +390,7 @@ update.put = (args: { value_item: string | number | { id: string | number } } | 
  * @see app/Http/Controllers/Admin/ValueItemController.php:68
  * @route '/admin/values/{value_item}'
  */
-        updateForm.put = (args: { value_item: string | number | { id: string | number } } | [value_item: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        updateForm.put = (args: { value_item: string | { id: string } } | [value_item: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: update.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'PUT',
@@ -406,7 +406,7 @@ update.put = (args: { value_item: string | number | { id: string | number } } | 
  * @see app/Http/Controllers/Admin/ValueItemController.php:78
  * @route '/admin/values/{value_item}/move'
  */
-export const move = (args: { value_item: string | number | { id: string | number } } | [value_item: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const move = (args: { value_item: string | { id: string } } | [value_item: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: move.url(args, options),
     method: 'post',
 })
@@ -421,7 +421,7 @@ move.definition = {
  * @see app/Http/Controllers/Admin/ValueItemController.php:78
  * @route '/admin/values/{value_item}/move'
  */
-move.url = (args: { value_item: string | number | { id: string | number } } | [value_item: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+move.url = (args: { value_item: string | { id: string } } | [value_item: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { value_item: args }
     }
@@ -454,7 +454,7 @@ move.url = (args: { value_item: string | number | { id: string | number } } | [v
  * @see app/Http/Controllers/Admin/ValueItemController.php:78
  * @route '/admin/values/{value_item}/move'
  */
-move.post = (args: { value_item: string | number | { id: string | number } } | [value_item: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+move.post = (args: { value_item: string | { id: string } } | [value_item: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: move.url(args, options),
     method: 'post',
 })
@@ -464,7 +464,7 @@ move.post = (args: { value_item: string | number | { id: string | number } } | [
  * @see app/Http/Controllers/Admin/ValueItemController.php:78
  * @route '/admin/values/{value_item}/move'
  */
-    const moveForm = (args: { value_item: string | number | { id: string | number } } | [value_item: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    const moveForm = (args: { value_item: string | { id: string } } | [value_item: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: move.url(args, options),
         method: 'post',
     })
@@ -474,7 +474,7 @@ move.post = (args: { value_item: string | number | { id: string | number } } | [
  * @see app/Http/Controllers/Admin/ValueItemController.php:78
  * @route '/admin/values/{value_item}/move'
  */
-        moveForm.post = (args: { value_item: string | number | { id: string | number } } | [value_item: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        moveForm.post = (args: { value_item: string | { id: string } } | [value_item: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: move.url(args, options),
             method: 'post',
         })
@@ -485,7 +485,7 @@ move.post = (args: { value_item: string | number | { id: string | number } } | [
  * @see app/Http/Controllers/Admin/ValueItemController.php:103
  * @route '/admin/values/{value_item}'
  */
-export const destroy = (args: { value_item: string | number | { id: string | number } } | [value_item: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { value_item: string | { id: string } } | [value_item: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -500,7 +500,7 @@ destroy.definition = {
  * @see app/Http/Controllers/Admin/ValueItemController.php:103
  * @route '/admin/values/{value_item}'
  */
-destroy.url = (args: { value_item: string | number | { id: string | number } } | [value_item: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { value_item: string | { id: string } } | [value_item: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { value_item: args }
     }
@@ -533,7 +533,7 @@ destroy.url = (args: { value_item: string | number | { id: string | number } } |
  * @see app/Http/Controllers/Admin/ValueItemController.php:103
  * @route '/admin/values/{value_item}'
  */
-destroy.delete = (args: { value_item: string | number | { id: string | number } } | [value_item: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { value_item: string | { id: string } } | [value_item: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -543,7 +543,7 @@ destroy.delete = (args: { value_item: string | number | { id: string | number } 
  * @see app/Http/Controllers/Admin/ValueItemController.php:103
  * @route '/admin/values/{value_item}'
  */
-    const destroyForm = (args: { value_item: string | number | { id: string | number } } | [value_item: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    const destroyForm = (args: { value_item: string | { id: string } } | [value_item: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: destroy.url(args, {
                     [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                         _method: 'DELETE',
@@ -558,7 +558,7 @@ destroy.delete = (args: { value_item: string | number | { id: string | number } 
  * @see app/Http/Controllers/Admin/ValueItemController.php:103
  * @route '/admin/values/{value_item}'
  */
-        destroyForm.delete = (args: { value_item: string | number | { id: string | number } } | [value_item: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        destroyForm.delete = (args: { value_item: string | { id: string } } | [value_item: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: destroy.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'DELETE',

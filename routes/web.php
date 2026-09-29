@@ -38,6 +38,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('subscribers', [SubscriberController::class, 'index'])->name('subscribers.index');
         Route::get('subscribers/export', [SubscriberController::class, 'export'])->name('subscribers.export');
+        Route::delete('subscribers/{subscriber}', [SubscriberController::class, 'destroy'])->name('subscribers.destroy');
 
         // One controller per content type — see app/Http/Controllers/Admin.
         Route::prefix('services')->name('services.')->controller(ServiceController::class)->group(function () {

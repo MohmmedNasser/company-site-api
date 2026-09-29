@@ -1,5 +1,6 @@
 import { Head } from '@inertiajs/react';
 import { Download } from 'lucide-react';
+import { ConfirmDelete } from '@/components/admin/confirm-delete';
 import { Pagination } from '@/components/admin/pagination';
 import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
@@ -12,7 +13,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { dashboard } from '@/routes';
-import { exportMethod, index } from '@/routes/admin/subscribers';
+import { destroy, exportMethod, index } from '@/routes/admin/subscribers';
 import type { Pagination as PaginationMeta } from '@/types';
 
 type Props = {
@@ -22,7 +23,7 @@ type Props = {
 
 const dateFormat = new Intl.DateTimeFormat('en', { dateStyle: 'medium' });
 
-/** Read-only list of POST /api/v1/newsletter sign-ups. */
+/** POST /api/v1/newsletter sign-ups. Rows can only be deleted, never edited. */
 export default function SubscribersIndex({ subscribers, pagination }: Props) {
     return (
         <>
@@ -48,13 +49,16 @@ export default function SubscribersIndex({ subscribers, pagination }: Props) {
                             <TableRow>
                                 <TableHead>Email</TableHead>
                                 <TableHead>Subscribed</TableHead>
+                                <TableHead className="w-12">
+                                    <span className="sr-only">Actions</span>
+                                </TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {subscribers.length === 0 && (
                                 <TableRow>
                                     <TableCell
-                                        colSpan={2}
+                                        colSpan={3}
                                         className="h-24 text-center text-muted-foreground"
                                     >
                                         No subscribers yet.
@@ -70,6 +74,12 @@ export default function SubscribersIndex({ subscribers, pagination }: Props) {
                                         {dateFormat.format(
                                             new Date(subscriber.createdAt),
                                         )}
+                                    </TableCell>
+                                    <TableCell className="text-end">
+                                        <ConfirmDelete
+                                            subject={`the subscriber ${subscriber.email}`}
+                                            action={destroy(subscriber.id)}
+                                        />
                                     </TableCell>
                                 </TableRow>
                             ))}

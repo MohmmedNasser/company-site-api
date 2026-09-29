@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\NewsletterSubscription;
 use App\Models\User;
 use Database\Seeders\AdminUserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -87,6 +88,15 @@ class AdminAuthTest extends TestCase
     public function test_guests_are_sent_to_login(string $url): void
     {
         $this->get($url)->assertRedirect('/login');
+    }
+
+    public function test_guests_cannot_delete_subscribers(): void
+    {
+        $subscriber = NewsletterSubscription::factory()->create();
+
+        $this->delete("/admin/subscribers/{$subscriber->id}")->assertRedirect('/login');
+
+        $this->assertNotNull($subscriber->fresh());
     }
 
     public function test_the_admin_account_cannot_delete_itself(): void

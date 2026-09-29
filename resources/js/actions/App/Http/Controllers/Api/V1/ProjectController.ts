@@ -82,7 +82,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
  * @see app/Http/Controllers/Api/V1/ProjectController.php:41
  * @route '/api/v1/projects/{project}'
  */
-export const show = (args: { project: string | number | { slug: string | number } } | [project: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { project: string | { slug: string } } | [project: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -97,7 +97,7 @@ show.definition = {
  * @see app/Http/Controllers/Api/V1/ProjectController.php:41
  * @route '/api/v1/projects/{project}'
  */
-show.url = (args: { project: string | number | { slug: string | number } } | [project: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+show.url = (args: { project: string | { slug: string } } | [project: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -130,7 +130,7 @@ show.url = (args: { project: string | number | { slug: string | number } } | [pr
  * @see app/Http/Controllers/Api/V1/ProjectController.php:41
  * @route '/api/v1/projects/{project}'
  */
-show.get = (args: { project: string | number | { slug: string | number } } | [project: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { project: string | { slug: string } } | [project: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -139,7 +139,7 @@ show.get = (args: { project: string | number | { slug: string | number } } | [pr
  * @see app/Http/Controllers/Api/V1/ProjectController.php:41
  * @route '/api/v1/projects/{project}'
  */
-show.head = (args: { project: string | number | { slug: string | number } } | [project: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { project: string | { slug: string } } | [project: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -149,7 +149,7 @@ show.head = (args: { project: string | number | { slug: string | number } } | [p
  * @see app/Http/Controllers/Api/V1/ProjectController.php:41
  * @route '/api/v1/projects/{project}'
  */
-    const showForm = (args: { project: string | number | { slug: string | number } } | [project: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    const showForm = (args: { project: string | { slug: string } } | [project: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
         action: show.url(args, options),
         method: 'get',
     })
@@ -159,7 +159,7 @@ show.head = (args: { project: string | number | { slug: string | number } } | [p
  * @see app/Http/Controllers/Api/V1/ProjectController.php:41
  * @route '/api/v1/projects/{project}'
  */
-        showForm.get = (args: { project: string | number | { slug: string | number } } | [project: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        showForm.get = (args: { project: string | { slug: string } } | [project: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: show.url(args, options),
             method: 'get',
         })
@@ -168,7 +168,7 @@ show.head = (args: { project: string | number | { slug: string | number } } | [p
  * @see app/Http/Controllers/Api/V1/ProjectController.php:41
  * @route '/api/v1/projects/{project}'
  */
-        showForm.head = (args: { project: string | number | { slug: string | number } } | [project: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        showForm.head = (args: { project: string | { slug: string } } | [project: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: show.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'HEAD',

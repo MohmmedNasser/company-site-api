@@ -215,7 +215,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
  * @see app/Http/Controllers/Admin/ProcessStepController.php:59
  * @route '/admin/process-steps/{process_step}/edit'
  */
-export const edit = (args: { process_step: string | number | { id: string | number } } | [process_step: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { process_step: string | { id: string } } | [process_step: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -230,7 +230,7 @@ edit.definition = {
  * @see app/Http/Controllers/Admin/ProcessStepController.php:59
  * @route '/admin/process-steps/{process_step}/edit'
  */
-edit.url = (args: { process_step: string | number | { id: string | number } } | [process_step: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+edit.url = (args: { process_step: string | { id: string } } | [process_step: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { process_step: args }
     }
@@ -263,7 +263,7 @@ edit.url = (args: { process_step: string | number | { id: string | number } } | 
  * @see app/Http/Controllers/Admin/ProcessStepController.php:59
  * @route '/admin/process-steps/{process_step}/edit'
  */
-edit.get = (args: { process_step: string | number | { id: string | number } } | [process_step: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { process_step: string | { id: string } } | [process_step: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -272,7 +272,7 @@ edit.get = (args: { process_step: string | number | { id: string | number } } | 
  * @see app/Http/Controllers/Admin/ProcessStepController.php:59
  * @route '/admin/process-steps/{process_step}/edit'
  */
-edit.head = (args: { process_step: string | number | { id: string | number } } | [process_step: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { process_step: string | { id: string } } | [process_step: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -282,7 +282,7 @@ edit.head = (args: { process_step: string | number | { id: string | number } } |
  * @see app/Http/Controllers/Admin/ProcessStepController.php:59
  * @route '/admin/process-steps/{process_step}/edit'
  */
-    const editForm = (args: { process_step: string | number | { id: string | number } } | [process_step: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    const editForm = (args: { process_step: string | { id: string } } | [process_step: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
         action: edit.url(args, options),
         method: 'get',
     })
@@ -292,7 +292,7 @@ edit.head = (args: { process_step: string | number | { id: string | number } } |
  * @see app/Http/Controllers/Admin/ProcessStepController.php:59
  * @route '/admin/process-steps/{process_step}/edit'
  */
-        editForm.get = (args: { process_step: string | number | { id: string | number } } | [process_step: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        editForm.get = (args: { process_step: string | { id: string } } | [process_step: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: edit.url(args, options),
             method: 'get',
         })
@@ -301,7 +301,7 @@ edit.head = (args: { process_step: string | number | { id: string | number } } |
  * @see app/Http/Controllers/Admin/ProcessStepController.php:59
  * @route '/admin/process-steps/{process_step}/edit'
  */
-        editForm.head = (args: { process_step: string | number | { id: string | number } } | [process_step: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        editForm.head = (args: { process_step: string | { id: string } } | [process_step: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: edit.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'HEAD',
@@ -317,7 +317,7 @@ edit.head = (args: { process_step: string | number | { id: string | number } } |
  * @see app/Http/Controllers/Admin/ProcessStepController.php:68
  * @route '/admin/process-steps/{process_step}'
  */
-export const update = (args: { process_step: string | number | { id: string | number } } | [process_step: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { process_step: string | { id: string } } | [process_step: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -332,7 +332,7 @@ update.definition = {
  * @see app/Http/Controllers/Admin/ProcessStepController.php:68
  * @route '/admin/process-steps/{process_step}'
  */
-update.url = (args: { process_step: string | number | { id: string | number } } | [process_step: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+update.url = (args: { process_step: string | { id: string } } | [process_step: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { process_step: args }
     }
@@ -365,7 +365,7 @@ update.url = (args: { process_step: string | number | { id: string | number } } 
  * @see app/Http/Controllers/Admin/ProcessStepController.php:68
  * @route '/admin/process-steps/{process_step}'
  */
-update.put = (args: { process_step: string | number | { id: string | number } } | [process_step: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { process_step: string | { id: string } } | [process_step: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -375,7 +375,7 @@ update.put = (args: { process_step: string | number | { id: string | number } } 
  * @see app/Http/Controllers/Admin/ProcessStepController.php:68
  * @route '/admin/process-steps/{process_step}'
  */
-    const updateForm = (args: { process_step: string | number | { id: string | number } } | [process_step: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    const updateForm = (args: { process_step: string | { id: string } } | [process_step: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: update.url(args, {
                     [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                         _method: 'PUT',
@@ -390,7 +390,7 @@ update.put = (args: { process_step: string | number | { id: string | number } } 
  * @see app/Http/Controllers/Admin/ProcessStepController.php:68
  * @route '/admin/process-steps/{process_step}'
  */
-        updateForm.put = (args: { process_step: string | number | { id: string | number } } | [process_step: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        updateForm.put = (args: { process_step: string | { id: string } } | [process_step: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: update.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'PUT',
@@ -406,7 +406,7 @@ update.put = (args: { process_step: string | number | { id: string | number } } 
  * @see app/Http/Controllers/Admin/ProcessStepController.php:78
  * @route '/admin/process-steps/{process_step}/move'
  */
-export const move = (args: { process_step: string | number | { id: string | number } } | [process_step: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const move = (args: { process_step: string | { id: string } } | [process_step: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: move.url(args, options),
     method: 'post',
 })
@@ -421,7 +421,7 @@ move.definition = {
  * @see app/Http/Controllers/Admin/ProcessStepController.php:78
  * @route '/admin/process-steps/{process_step}/move'
  */
-move.url = (args: { process_step: string | number | { id: string | number } } | [process_step: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+move.url = (args: { process_step: string | { id: string } } | [process_step: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { process_step: args }
     }
@@ -454,7 +454,7 @@ move.url = (args: { process_step: string | number | { id: string | number } } | 
  * @see app/Http/Controllers/Admin/ProcessStepController.php:78
  * @route '/admin/process-steps/{process_step}/move'
  */
-move.post = (args: { process_step: string | number | { id: string | number } } | [process_step: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+move.post = (args: { process_step: string | { id: string } } | [process_step: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: move.url(args, options),
     method: 'post',
 })
@@ -464,7 +464,7 @@ move.post = (args: { process_step: string | number | { id: string | number } } |
  * @see app/Http/Controllers/Admin/ProcessStepController.php:78
  * @route '/admin/process-steps/{process_step}/move'
  */
-    const moveForm = (args: { process_step: string | number | { id: string | number } } | [process_step: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    const moveForm = (args: { process_step: string | { id: string } } | [process_step: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: move.url(args, options),
         method: 'post',
     })
@@ -474,7 +474,7 @@ move.post = (args: { process_step: string | number | { id: string | number } } |
  * @see app/Http/Controllers/Admin/ProcessStepController.php:78
  * @route '/admin/process-steps/{process_step}/move'
  */
-        moveForm.post = (args: { process_step: string | number | { id: string | number } } | [process_step: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        moveForm.post = (args: { process_step: string | { id: string } } | [process_step: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: move.url(args, options),
             method: 'post',
         })
@@ -485,7 +485,7 @@ move.post = (args: { process_step: string | number | { id: string | number } } |
  * @see app/Http/Controllers/Admin/ProcessStepController.php:103
  * @route '/admin/process-steps/{process_step}'
  */
-export const destroy = (args: { process_step: string | number | { id: string | number } } | [process_step: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { process_step: string | { id: string } } | [process_step: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -500,7 +500,7 @@ destroy.definition = {
  * @see app/Http/Controllers/Admin/ProcessStepController.php:103
  * @route '/admin/process-steps/{process_step}'
  */
-destroy.url = (args: { process_step: string | number | { id: string | number } } | [process_step: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { process_step: string | { id: string } } | [process_step: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { process_step: args }
     }
@@ -533,7 +533,7 @@ destroy.url = (args: { process_step: string | number | { id: string | number } }
  * @see app/Http/Controllers/Admin/ProcessStepController.php:103
  * @route '/admin/process-steps/{process_step}'
  */
-destroy.delete = (args: { process_step: string | number | { id: string | number } } | [process_step: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { process_step: string | { id: string } } | [process_step: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -543,7 +543,7 @@ destroy.delete = (args: { process_step: string | number | { id: string | number 
  * @see app/Http/Controllers/Admin/ProcessStepController.php:103
  * @route '/admin/process-steps/{process_step}'
  */
-    const destroyForm = (args: { process_step: string | number | { id: string | number } } | [process_step: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    const destroyForm = (args: { process_step: string | { id: string } } | [process_step: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: destroy.url(args, {
                     [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                         _method: 'DELETE',
@@ -558,7 +558,7 @@ destroy.delete = (args: { process_step: string | number | { id: string | number 
  * @see app/Http/Controllers/Admin/ProcessStepController.php:103
  * @route '/admin/process-steps/{process_step}'
  */
-        destroyForm.delete = (args: { process_step: string | number | { id: string | number } } | [process_step: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        destroyForm.delete = (args: { process_step: string | { id: string } } | [process_step: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: destroy.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'DELETE',

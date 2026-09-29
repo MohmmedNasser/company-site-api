@@ -86,4 +86,14 @@ class InboxTest extends TestCase
         $csv = $this->get('/admin/subscribers/export')->assertOk()->streamedContent();
         $this->assertSame(4, substr_count(trim($csv), "\n") + 1);
     }
+
+    public function test_subscribers_can_be_deleted_one_at_a_time(): void
+    {
+        $subscribers = NewsletterSubscription::factory()->count(2)->create();
+
+        $this->delete("/admin/subscribers/{$subscribers[0]->id}")->assertRedirect();
+
+        $this->assertNull($subscribers[0]->fresh());
+        $this->assertNotNull($subscribers[1]->fresh());
+    }
 }

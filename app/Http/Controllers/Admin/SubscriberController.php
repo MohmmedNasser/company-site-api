@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\NewsletterSubscription;
 use App\Support\Csv;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Date;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -30,6 +31,15 @@ class SubscriberController extends Controller
                 'nextUrl' => $subscribers->nextPageUrl(),
             ],
         ]);
+    }
+
+    public function destroy(NewsletterSubscription $subscriber): RedirectResponse
+    {
+        $subscriber->delete();
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Subscriber deleted.']);
+
+        return back();
     }
 
     public function export(): StreamedResponse
